@@ -7,7 +7,7 @@ import logo_url from "../../assets/c-logo.jpg";
 
 const Header = () => {
   return (
-    <header className="border-b-2 border-black items-center flex justify-between shadow-lg shadow-gray-400 w-full overflow-hidden">
+    <header className="border-b-2 border-black items-center flex justify-between shadow-lg shadow-gray-400 overflow-hidden object-contain">
       <div className="items-center flex justify-between w-full object-contain p-2 h-full lg:pl-4 lg:pr-4">
         <div className="flex items-center space-x-2">
           <Menu className="w-[8vmin] h-[8vmin] lg:w-[7vmin] lg:h-[8vmin]" />

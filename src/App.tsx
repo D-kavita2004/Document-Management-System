@@ -1,12 +1,16 @@
 import './App.css';
-// import Header from './components/Elements/Header';
-import Navbar from './components/Elements/Navbar';
+import { Layout } from './components/Elements/Layout';
+import { BrowserRouter,Route,Routes } from 'react-router-dom';
 
 function App() {
   return (
     <>
-      <Navbar/>
-    </>
+      <BrowserRouter>
+            <Routes>
+                <Route path='/' element={<Layout/>}></Route>
+            </Routes>
+      </BrowserRouter>
+    </> 
   )
 }
 
