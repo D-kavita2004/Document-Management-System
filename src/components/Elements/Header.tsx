@@ -13,7 +13,7 @@ const Header = ({displayNav,setDisplayNav}) => {
   }
 
   return (
-    <header className="border-b-2 border-black items-center flex justify-between shadow-lg shadow-gray-400 overflow-hidden object-contain">
+    <header className={`border-b-2 border-black items-center flex justify-between shadow-lg shadow-gray-400 overflow-hidden object-contain`}>
       <div className="items-center flex justify-between w-full object-contain p-2 h-full lg:pl-4 lg:pr-4">
           <div className="flex items-center space-x-2">
             <Menu onClick={handleNavDisplay} className={`w-[8vmin] h-[8vmin] lg:w-[7vmin] lg:h-[8vmin] lg:hidden ${displayNav ? "hidden":"block"}`} />

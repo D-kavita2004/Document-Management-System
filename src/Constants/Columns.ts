@@ -14,7 +14,7 @@ const columnHelper = createColumnHelper<Document>();
 export const columns = [
 
       columnHelper.accessor("fileName",{
-            header:()=>"File Name",
+            header:()=>"Name",
             cell:info=>info.getValue()
       }),
       columnHelper.accessor("date",{
