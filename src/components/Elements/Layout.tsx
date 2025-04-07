@@ -8,12 +8,16 @@ export const Layout = () => {
   const [displayNav, setDisplayNav] = useState(false);
 
   return (
-    <div>
+    <div className="h-screen">
         <div className="flex h-screen">
+          {/* navbar */}
             <Navbar displayNav={displayNav} setDisplayNav={setDisplayNav} />
 
+            {/* main-content */}
             <div className="flex flex-col flex-1">
-              <Header displayNav={displayNav} setDisplayNav={setDisplayNav} />
+              <div className="">
+                  <Header displayNav={displayNav} setDisplayNav={setDisplayNav} />
+              </div>
               <main className="flex-1 bg-gray-100"><Outlet/></main>
             </div>       
         </div>
