@@ -44,19 +44,19 @@ const MyDocuments = () => {
   });
 
   return (
-    <div className="p-7 lg:px-15 max-w-screen">
+    <div className="p-5 lg:px-15 max-w-screen object-contain">
           <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 " />
               <Input
               placeholder="Search docs..."
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              className="mb-4 w-[60%] border-black border-2 focus:border-gray-800 px-12"
+              className="w-[70%] lg:w-[60%] border-black border-2 focus:border-gray-800 px-12"
             />
             
           </div>
 
-          <div className="overflow-x-auto border-black rounded shadow-md shadow-blue-800 ">
+          <div className="overflow-auto border-black rounded shadow-md shadow-blue-800 max-h-[55vh] my-4">
             <table className="border-collapse w-full h-full ">
               <thead className="bg-[#0097b2]">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -95,7 +95,7 @@ const MyDocuments = () => {
               </tbody>
             </table>
           </div>
-          <div className="flex justify-between px-1 mt-2 gap-2">
+          <div className="flex justify-between px-1 gap-2">
                 <div className="flex">
                     <label htmlFor="pageSize" className="text-sm font-medium mt-1 mr-0.5">
                       Rows per page:
