@@ -69,7 +69,7 @@ const MyDocuments = () => {
                         key={header.id}
                         className="border border-gray-400 px-4 py-2 text-left whitespace-nowrap"
                       >
-                        <div className="flex items-center gap-1 cursor-pointer" onClick={header.column.getToggleSortingHandler()}>
+                        <div className="flex items-center gap-1 cursor-pointer size-full " onClick={header.column.getToggleSortingHandler()}>
                         
                           {flexRender(
                             header.column.columnDef.header,

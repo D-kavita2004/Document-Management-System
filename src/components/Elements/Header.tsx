@@ -18,11 +18,11 @@ const Header = ({displayNav,setDisplayNav}) => {
           <div className="flex items-center space-x-2">
             <Menu onClick={handleNavDisplay} className={`w-[8vmin] h-[8vmin] lg:w-[7vmin] lg:h-[8vmin] lg:hidden ${displayNav ? "hidden":"block"}`} />
             <div className="w-[12vmin] lg:w-[10vmin] rounded-full overflow-hidden">
-              <img
+                <a href="https://www.smartcodersconsulting.com/" target="_blank"><img
                 className="w-full h-full object-fill"
                 src={logo_url}
                 alt="logo"
-              />
+              /></a>
             </div>
           </div>
         <div className="flex h-full items-center space-x-2 object-contain">

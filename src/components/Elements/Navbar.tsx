@@ -25,7 +25,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
 
         <X onClick={handleNavDisplay} className='text-gray-400 absolute right-2 top-2 object-contain cursor-pointer lg:hidden' size={32}/>
         {/* Company Name */}
-        <h3 className="text-2xl text-white text-center lg:mx-4 mt-4 font-bold cursor-pointer italic">SmartCoders Consulting Pvt. Ltd.</h3>
+        <h3 className="text-2xl text-white text-center lg:mx-4 mt-4 font-bold cursor-pointer italic"><a href='https://www.smartcodersconsulting.com/' target='_blank'>SmartCoders Consulting Pvt. Ltd.</a></h3>
 
         {/* Navigation Menus */}
         <div className="mt-8 p-2 flex-grow">
