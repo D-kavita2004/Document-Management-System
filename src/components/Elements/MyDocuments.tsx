@@ -45,6 +45,8 @@ const MyDocuments = () => {
 
   return (
     <div className="p-5 lg:px-15 max-w-screen object-contain">
+
+          {/* Search Functionality */}
           <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 " />
               <Input
@@ -56,9 +58,10 @@ const MyDocuments = () => {
             
           </div>
 
+          {/* Table */}
           <div className="overflow-auto border-black rounded shadow-md shadow-blue-800 max-h-[55vh] my-4">
             <table className="border-collapse w-full h-full ">
-              <thead className="bg-[#0097b2]">
+              <thead className="bg-[#1A33A9] text-white">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
@@ -95,6 +98,8 @@ const MyDocuments = () => {
               </tbody>
             </table>
           </div>
+          
+          {/* Pagination */}
           <div className="flex justify-between px-1 gap-2">
                 <div className="flex">
                     <label htmlFor="pageSize" className="text-sm font-medium mt-1 mr-0.5">
@@ -117,7 +122,7 @@ const MyDocuments = () => {
                       className="w-15 border-blue-900 border-2"
                     />
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center lg:gap-3 gap-1">
                     <button
                       onClick={() => table.previousPage()}
                       disabled={!table.getCanPreviousPage()}

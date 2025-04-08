@@ -28,14 +28,13 @@ const Header = ({displayNav,setDisplayNav}) => {
         <div className="flex h-full items-center space-x-2 object-contain">
           <div className="flex items-center relative max-w-md">
             <Input
-              className="rounded-2xl lg:p-4 lg:pl-10 border-2 border-black w-[40vmin] h-[7vmin] object-contain"
-              style={{ backgroundColor: "#0097b2" }}
+              className="rounded-xl lg:p-3 lg:pl-10 border-2 border-[#1A33A9] w-[42vmin] h-[8vmin] md:h-[7vmin] object-contain shadow-md shadow-gray-400"
               type="text"
               placeholder="Search Docs.."
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black" />
           </div>
-          <Button className="rounded-2xl text-xl ml-1 p-4 md:p-7 lg:p-5 italic bg-[#3b3636]">
+          <Button className="rounded-2xl text-xl ml-1 p-4 md:p-7 lg:p-5 italic bg-white text-black border-2 border-[#1A33A9] shadow-md shadow-gray-400 hover:text-white hover:bg-[#1A33A9]">
             Theme
           </Button>
         </div>

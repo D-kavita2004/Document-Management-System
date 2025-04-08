@@ -31,7 +31,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
         <div className="mt-8 p-2 flex-grow">
                 {
                     menuItems.map((item)=>(
-                        <div className={`text-center my-5 text-xl text-white p-2 rounded-3xl  shadow-md shadow-gray-400  hover:font-bold hover:bg-[#0097b2] ${item.path === location.pathname ? "bg-[#0097b2]" : ""}`} key={item.path}>
+                        <div className={`text-center my-5 text-xl text-white p-2 rounded-3xl  shadow-md shadow-gray-400  hover:font-bold hover:bg-[#1A33A9] ${item.path === location.pathname ? "bg-[#1A33A9]" : ""}`} key={item.path}>
                             <Link className="cursor-pointer"to={item.path}>{item.label}</Link>
                         </div>
                     ))
