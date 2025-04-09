@@ -1,9 +1,14 @@
-import React from 'react'
+import DisplayDocs from "./DisplayDocs";
+import { mockData } from "@/Constants/Data";
+import { columns } from "@/Constants/Columns";
 
 const SearchDocuments = () => {
-  return (
-    <div>SearchDocuments</div>
-  )
-}
 
-export default SearchDocuments
+  return (
+    <>
+        <DisplayDocs mockData={mockData} columns={columns}/> 
+    </>
+  );
+};
+
+export default SearchDocuments;
