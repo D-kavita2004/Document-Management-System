@@ -30,7 +30,7 @@ const Header = ({displayNav,setDisplayNav}) => {
             <Input
               className="rounded-xl lg:p-3 lg:pl-10 border-2 border-[#1A33A9] w-[42vmin] h-[8vmin] md:h-[7vmin] object-contain shadow-md shadow-gray-400"
               type="text"
-              placeholder="Search Docs.."
+              placeholder="Search Docs..."
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black" />
           </div>
