@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Table } from "./Table";
+import GridDocs from "./GridDocs";
 import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import {LayoutGrid} from "lucide-react";
@@ -73,10 +74,13 @@ const DisplayDocs = ({mockData,columns}) => {
           {/* Table */}
           <div className="overflow-auto border-black rounded shadow-md shadow-blue-800 max-h-[55vh] my-4">
                 {
-                  DisplayFormat==true ? (
+                  DisplayFormat==true ? 
+                  (
                     <Table table={table}/>
                   ):
-                  <h1>Hii i am grid</h1>
+                  (
+                    <GridDocs table={table}/>
+                  )
                 }
           </div>
           
