@@ -16,8 +16,9 @@ import {
 
 const DisplayDocs = ({mockData,columns}) => {
 
-  const [data, setData] = useState(mockData);
   const [DisplayFormat,setDisplayFormat] = useState(true) //default table will be shown
+
+  const [data, setData] = useState(mockData);
   const [sorting,setSorting] = useState([]);
   const [globalFilter,setGlobalFilter] = useState("");
   const [pagination, setPagination] = useState({
