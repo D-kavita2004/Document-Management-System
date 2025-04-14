@@ -1,8 +1,8 @@
-import DisplayDocs from "./DisplayDocs";
+import DisplayDocs from "../DisplayDocs";
 import { mockData } from "@/Constants/Data";
 import { columns } from "@/Constants/Columns";
 
-const MyDocuments = () => {
+const SearchDocuments = () => {
 
   return (
     <>
@@ -11,4 +11,4 @@ const MyDocuments = () => {
   );
 };
 
-export default MyDocuments;
+export default SearchDocuments;

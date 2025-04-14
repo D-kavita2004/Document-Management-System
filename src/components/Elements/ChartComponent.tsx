@@ -41,15 +41,15 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartComponent() {
-  const [timeRange, setTimeRange] = React.useState("90d")
+  const [timeRange, setTimeRange] = React.useState("Last 3 months")
 
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date)
     const referenceDate = new Date("2024-06-30")
     let daysToSubtract = 90
-    if (timeRange === "30d") {
+    if (timeRange === "Last 30 days") {
       daysToSubtract = 30
-    } else if (timeRange === "7d") {
+    } else if (timeRange === "Last 7 days") {
       daysToSubtract = 7
     }
     const startDate = new Date(referenceDate)
@@ -61,9 +61,9 @@ export function ChartComponent() {
     <Card className="dark:bg-white dark:text-black md:w-[90%] mx-auto w-[100%]">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Area Chart - Interactive</CardTitle>
+          <CardTitle>Recent Activity</CardTitle>
           <CardDescription>
-            Showing total visitors for the last 3 months
+            Showing total visitors for the {timeRange}
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -74,13 +74,13 @@ export function ChartComponent() {
             <SelectValue placeholder="Last 3 months" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
+            <SelectItem value="Last 3 months" className="rounded-lg">
               Last 3 months
             </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
+            <SelectItem value="Last 30 days" className="rounded-lg">
               Last 30 days
             </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
+            <SelectItem value="Last 7 days" className="rounded-lg">
               Last 7 days
             </SelectItem>
           </SelectContent>
