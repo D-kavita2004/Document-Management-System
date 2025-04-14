@@ -36,6 +36,10 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --color-mobile: #10b981;
+  --color-desktop: #3b82f6;
+  --chart-1: 220 90% 56%; /* HSL for blue */
+  --chart-2: 160 84% 39%; /* HSL for green */
 }
 
 .dark {
@@ -140,4 +144,14 @@
     @apply bg-background text-foreground;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
   }
+}
+
+/* Dark mode via Tailwind */
+.dark body {
+  @apply bg-gray-900 text-white;
+}
+
+/* Blue theme */
+.light body {
+  @apply bg-gray-500 text-black;
 }

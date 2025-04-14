@@ -5,7 +5,7 @@ import { ArrowUpDown } from "lucide-react";
 export const Table = ({table}) => {
   return (
             <table className="border-collapse w-full h-full ">
-                  <thead className="bg-[#1A33A9] text-white sticky top-0 z-10">
+                  <thead className="bg-[#1A33A9] dark:bg-white dark:text-black text-white sticky top-0 z-10">
                   {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                         {headerGroup.headers.map((header) => (
@@ -28,7 +28,7 @@ export const Table = ({table}) => {
                   </thead>
                   <tbody>
                   {table.getPaginationRowModel().rows.map((row) => (
-                        <tr key={row.id} className="even:bg-gray-200">
+                        <tr key={row.id} className="even:bg-gray-200 dark:bg-[#3b3636]">
                         {row.getVisibleCells().map((cell) => (
                         <td
                               key={cell.id}

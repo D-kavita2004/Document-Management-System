@@ -18,7 +18,7 @@ export const Layout = () => {
                 <div className="shrink-0">
                   <Header displayNav={displayNav} setDisplayNav={setDisplayNav} />
                 </div>
-                <main className="flex-1 bg-gray-100 p-4">
+                <main className="flex-1 bg-gray-100 dark:bg-[#3b3636]  p-4">
                   <Outlet />
                 </main>
                 {/* <footer>I Am a Footer</footer> */}

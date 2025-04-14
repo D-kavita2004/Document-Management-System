@@ -34,7 +34,7 @@ const GridDocs = ({ table }) => {
           return (
             <div
               key={row.id}
-              className="bg-white border border-gray-400 p-2 rounded shadow hover:shadow-md transition flex relative"
+              className="bg-white border border-gray-400 p-2 rounded shadow hover:shadow-md transition flex relative dark:bg-[#3b3636] dark:hover:bg-white dark:hover:text-black hover:text-white hover:bg-[#1A33A9]"
             >     
                 <div className='absolute right-1 cursor-pointer'>
                   <DropdownMenu >

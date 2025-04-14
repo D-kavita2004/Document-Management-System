@@ -55,7 +55,7 @@ const DisplayDocs = ({mockData,columns}) => {
 
               {/* Search bar */}
               <div className=" w-[70%] lg:w-[60%]">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 " />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 dark:bg-[#3C3C3C]" />
                   <Input
                   placeholder="Search docs..."
                   value={globalFilter}
@@ -65,15 +65,15 @@ const DisplayDocs = ({mockData,columns}) => {
               </div>
               {/* Layout Change */}
               <div className="flex gap-2 border-2 justify-center items-center">
-                  <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9]"}`} onClick={()=>{setDisplayFormat(true)}}><List className={`size-[6vmin] rounded ${DisplayFormat && "text-white"}`}/></div>
+                  <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9] dark:bg-white"}`} onClick={()=>{setDisplayFormat(true)}}><List className={`size-[6vmin] rounded ${DisplayFormat && "text-white dark:text-black"}`}/></div>
 
-                  <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]"}`} onClick={()=>{setDisplayFormat(false)}}><LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white"}`}/></div>
+                  <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}`} onClick={()=>{setDisplayFormat(false)}}><LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`}/></div>
               </div>
             
           </div>
 
           {/* Table */}
-          <div className="overflow-auto border-black rounded shadow-md shadow-blue-800 max-h-[55vh] my-4">
+          <div className="overflow-auto border-black rounded shadow-md shadow-gray-700 max-h-[55vh] my-4">
                 {
                   DisplayFormat==true ? 
                   (
@@ -105,7 +105,7 @@ const DisplayDocs = ({mockData,columns}) => {
                         }))
                       }
                       
-                      className="w-15 border-blue-900 border-2"
+                      className="w-15 border-blue-900 border-2 dark:border-white"
                     />
                 </div>
                 <div className="flex items-center lg:gap-3 gap-1">
