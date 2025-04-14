@@ -3,7 +3,17 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Menu } from "lucide-react";
 import { Search } from "lucide-react";
+import { Sun }  from "lucide-react";
+import { Moon } from "lucide-react";
+import { SunMoon } from "lucide-react";
 import logo_url from "../../assets/c-logo.jpg";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+
+} from "@/components/ui/dropdown-menu";
 
 const Header = ({displayNav,setDisplayNav}) => {
   
@@ -34,9 +44,18 @@ const Header = ({displayNav,setDisplayNav}) => {
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black" />
           </div>
-          <Button className="rounded-2xl text-xl ml-1 p-4 md:p-7 lg:p-5 italic bg-white text-black border-2 border-[#1A33A9] shadow-md shadow-gray-400 hover:text-white hover:bg-[#1A33A9]">
-            Theme
-          </Button>
+          
+          <DropdownMenu >
+                  <DropdownMenuTrigger>
+                      <Button className="rounded-2xl text-xl ml-1 p-4 md:p-7 lg:p-5 italic bg-white text-black border-2 border-[#1A33A9] shadow-md shadow-gray-400 hover:text-white hover:bg-[#1A33A9]">
+                      Theme
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                      <DropdownMenuItem><Sun/>Light</DropdownMenuItem>
+                      <DropdownMenuItem><Moon/>Dark</DropdownMenuItem>
+                  </DropdownMenuContent>
+          </DropdownMenu>          
         </div>
       </div>
     </header>
