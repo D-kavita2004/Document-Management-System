@@ -1,4 +1,6 @@
 import React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Menu } from "lucide-react";
@@ -19,12 +21,19 @@ import {
 
 const Header = ({displayNav,setDisplayNav}) => {
 
+  const [HeaderSearch, setHeaderSearch] = useState("");
+  const navigate = useNavigate();
   const { setTheme } = useTheme()
   
   const handleNavDisplay = ()=>{
     console.log("I am Clickng");
     setDisplayNav(true);
   }
+  const handleSearch = (e) => {
+    if (e.key === "Enter" && HeaderSearch.trim() !== "") {
+      navigate(`/Search_Documents?q=${encodeURIComponent(HeaderSearch.trim())}`);
+    }
+  };
 
   return (
     <header className={`bg-white border-b-2 border-black items-center flex justify-between shadow-lg shadow-gray-400 overflow-hidden object-contain max-w-screen dark:bg-[#3b3636]`}>
@@ -42,9 +51,12 @@ const Header = ({displayNav,setDisplayNav}) => {
         <div className="flex h-full items-center space-x-2 object-contain">
           <div className="flex items-center relative max-w-md">
             <Input
-              className="rounded-xl lg:p-3 lg:pl-10 border-2 border-[#1A33A9] w-[42vmin] h-[8vmin] md:h-[7vmin] object-contain shadow-md shadow-gray-400  dark:bg-white dark:border-black"
+              className="rounded-xl lg:p-3 lg:pl-10 border-2 border-[#1A33A9] w-[42vmin] h-[8vmin] md:h-[7vmin] object-contain shadow-md shadow-gray-400  dark:bg-white dark:border-black dark:text-black"
+              value={HeaderSearch}
+              onChange={(e) => setHeaderSearch(e.target.value)}
               type="text"
               placeholder="Search Docs..."
+              onKeyDown={handleSearch}
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black " />
           </div>

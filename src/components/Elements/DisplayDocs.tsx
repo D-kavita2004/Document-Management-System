@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { Table } from "./Table";
 import GridDocs from "./GridDocs";
 import { Input } from "../ui/input";
@@ -14,7 +15,7 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
-const DisplayDocs = ({mockData,columns}) => {
+const DisplayDocs = ({mockData,columns,headerSearch}) => {
 
   const [DisplayFormat,setDisplayFormat] = useState(true) //default table will be shown
 
@@ -45,6 +46,9 @@ const DisplayDocs = ({mockData,columns}) => {
     onPaginationChange:setPagination,
     getPaginationRowModel: getPaginationRowModel(),
   });
+  useEffect(()=>{
+      setGlobalFilter(headerSearch);
+  },[headerSearch])
 
 
   return (
