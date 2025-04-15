@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Table } from "./Table";
 import GridDocs from "./GridDocs";
 import { Input } from "../ui/input";
@@ -15,11 +14,22 @@ import {
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+
+
 const DisplayDocs = ({mockData,columns,headerSearch}) => {
 
   const [DisplayFormat,setDisplayFormat] = useState(true) //default table will be shown
 
   const [data, setData] = useState(mockData);
+  const [suggestions,setSuggestions] = useState([]);
   const [sorting,setSorting] = useState([]);
   const [globalFilter,setGlobalFilter] = useState("");
   const [pagination, setPagination] = useState({
@@ -46,6 +56,29 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
     onPaginationChange:setPagination,
     getPaginationRowModel: getPaginationRowModel(),
   });
+  const handleSuggestions = (value) => {
+    setGlobalFilter(value);
+  
+    const filteredRows = table.getFilteredRowModel().rows;
+    const searchSuggestions = filteredRows.slice(0, 5).map((row) => row.original);
+    setSuggestions(searchSuggestions);
+    console.log(suggestions);
+  };
+
+  const commandRef = useRef(null);
+  useEffect(() => {
+      function handleClickOutside(event) {
+        if (commandRef.current && !commandRef.current.contains(event.target)) {
+          setSuggestions([]);
+        }
+      }
+  
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+  }, []);
+  
   useEffect(()=>{
       setGlobalFilter(headerSearch);
   },[headerSearch])
@@ -56,27 +89,48 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
 
           {/* Search Functionality */}
           <div className="relative flex justify-between items-center">
+              
+                {/* Search Functionality */}
+                <div className="w-[70%] lg:w-[60%] z-100" ref={commandRef}>
+                    <Command className="w-full dark:bg-white dark:text-black border-2 border-black">
+                        <CommandInput 
+                          placeholder="Search docs..." 
+                          value={globalFilter}
+                          onValueChange={handleSuggestions}
+                        />
+                        {
+                          suggestions.length > 0 && (
+                            <CommandList className="absolute top-full w-[70%] lg:w-[60%] left-0 mt-1 max-h-60 overflow-y-auto rounded-md border bg-background shadow-md z-50 ">
+                            <CommandEmpty className="dark:text-white">No results found.</CommandEmpty>
+                            <CommandGroup heading="Suggestions">
+                              {suggestions.map((item, index) => (
+                                <CommandItem 
+                                  key={index} 
+                                  onSelect={() => 
+                                    {setGlobalFilter(item.fileName);
+                                    setSuggestions([]);}} // or item.name, etc.
+                                >
+                                  {item.fileName}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                          )
+                        }
 
-              {/* Search bar */}
-              <div className=" w-[70%] lg:w-[60%]">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 dark:bg-[#3C3C3C]" />
-                  <Input
-                  placeholder="Search docs..."
-                  value={globalFilter}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  className=" border-black border-2 focus:border-gray-800 px-12"
-                  />
-              </div>
-              {/* Layout Change */}
-              <div className="flex gap-2 border-2 justify-center items-center">
-                  <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9] dark:bg-white"}`} onClick={()=>{setDisplayFormat(true)}}><List className={`size-[6vmin] rounded ${DisplayFormat && "text-white dark:text-black"}`}/></div>
+                    </Command>
+                </div>
 
-                  <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}`} onClick={()=>{setDisplayFormat(false)}}><LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`}/></div>
-              </div>
+                {/* Layout Change */}
+                <div className="flex gap-2 border-2 justify-center items-center">
+                    <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9] dark:bg-white"}`} onClick={()=>{setDisplayFormat(true)}}><List className={`size-[6vmin] rounded ${DisplayFormat && "text-white dark:text-black"}`}/></div>
+
+                    <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}`} onClick={()=>{setDisplayFormat(false)}}><LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`}/></div>
+                </div>
             
           </div>
 
-          {/* Table */}
+          {/* Document Display */}
           <div className="overflow-auto border-black rounded shadow-md shadow-gray-700 max-h-[55vh] my-4">
                 {
                   DisplayFormat==true ? 
