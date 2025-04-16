@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Table } from "./Table";
 import GridDocs from "./GridDocs";
 import { Input } from "../ui/input";
-import { Search } from "lucide-react";
+// import { Search } from "lucide-react";
 import {LayoutGrid} from "lucide-react";
 import {List} from "lucide-react";
 
@@ -91,7 +91,7 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
           <div className="relative flex justify-between items-center">
               
                 {/* Search Functionality */}
-                <div className="w-[70%] lg:w-[60%] z-100" ref={commandRef}>
+                <div className="w-[70%] lg:w-[60%]" ref={commandRef}>
                     <Command className="w-full dark:bg-white dark:text-black border-2 border-black">
                         <CommandInput 
                           placeholder="Search docs..." 
@@ -100,7 +100,7 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
                         />
                         {
                           suggestions.length > 0 && (
-                            <CommandList className="absolute top-full w-[70%] lg:w-[60%] left-0 mt-1 max-h-60 overflow-y-auto rounded-md border bg-background shadow-md z-50 ">
+                            <CommandList className="absolute top-full w-[70%] lg:w-[60%] left-0 mt-1 max-h-60 overflow-y-auto rounded-md border bg-background shadow-md z-50">
                             <CommandEmpty className="dark:text-white">No results found.</CommandEmpty>
                             <CommandGroup heading="Suggestions">
                               {suggestions.map((item, index) => (
