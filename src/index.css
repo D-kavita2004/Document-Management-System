@@ -164,5 +164,5 @@
 
 /* Blue theme */
 .light body {
-  @apply bg-gray-500 text-black;
+  @apply bg-white text-black;
 }
