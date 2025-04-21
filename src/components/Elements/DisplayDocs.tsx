@@ -127,7 +127,7 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
                     </div>
 
                     <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}`} onClick={()=>{setDisplayFormat(false)}}>
-                        <LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`}/>
+                        <LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`} />
                     </div>
                 </div>
             
@@ -141,7 +141,7 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
                     <Table table={table}/>
                   ):
                   (
-                    <GridDocs table={table}/>
+                    <GridDocs table={table} />
                   )
                 }
           </div>
