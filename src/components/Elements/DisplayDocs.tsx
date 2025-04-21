@@ -26,7 +26,8 @@ import {
 
 const DisplayDocs = ({mockData,columns,headerSearch}) => {
 
-  const [DisplayFormat,setDisplayFormat] = useState(true) //default table will be shown
+  const [DisplayFormat,setDisplayFormat] = useState(true);  //default table will be shown
+  const commandRef = useRef(null);
 
   const [data, setData] = useState(mockData);
   const [suggestions,setSuggestions] = useState([]);
@@ -58,14 +59,12 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
   });
   const handleSuggestions = (value) => {
     setGlobalFilter(value);
-  
     const filteredRows = table.getFilteredRowModel().rows;
     const searchSuggestions = filteredRows.slice(0, 5).map((row) => row.original);
     setSuggestions(searchSuggestions);
-    console.log(suggestions);
   };
 
-  const commandRef = useRef(null);
+  
   useEffect(() => {
       function handleClickOutside(event) {
         if (commandRef.current && !commandRef.current.contains(event.target)) {
@@ -121,11 +120,15 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
                     </Command>
                 </div>
 
-                {/* Layout Change */}
+                {/* Layout Change buttons to toggle between table and grid layout*/}
                 <div className="flex gap-2 border-2 justify-center items-center">
-                    <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9] dark:bg-white"}`} onClick={()=>{setDisplayFormat(true)}}><List className={`size-[6vmin] rounded ${DisplayFormat && "text-white dark:text-black"}`}/></div>
+                    <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9] dark:bg-white"}`} onClick={()=>{setDisplayFormat(true)}}>
+                        <List className={`size-[6vmin] rounded ${DisplayFormat && "text-white dark:text-black"}`}/>
+                    </div>
 
-                    <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}`} onClick={()=>{setDisplayFormat(false)}}><LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`}/></div>
+                    <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}`} onClick={()=>{setDisplayFormat(false)}}>
+                        <LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`}/>
+                    </div>
                 </div>
             
           </div>

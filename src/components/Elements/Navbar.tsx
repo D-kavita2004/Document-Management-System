@@ -23,7 +23,12 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
         transition-transform duration-300 ease-in-out 
         ${displayNav ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
 
-        <X onClick={handleNavDisplay} className='text-gray-400 absolute right-2 top-2 object-contain cursor-pointer lg:hidden' size={32}/>
+        <X 
+            onClick={handleNavDisplay}
+            size={32}
+            data-testid="close-icon"
+            className='text-gray-400 absolute right-2 top-2 object-contain cursor-pointer lg:hidden' 
+        />
         {/* Company Name */}
         <h3 className="text-2xl text-white text-center lg:mx-4 mt-4 font-bold cursor-pointer italic"><a href='https://www.smartcodersconsulting.com/' target='_blank'>SmartCoders Consulting Pvt. Ltd.</a></h3>
 
@@ -45,7 +50,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
 
         </div>
 
-        {/* Logout Bottom */}
+        {/* Logout Button */}
         <div className="mt-auto p-3 text-center">
              <h4 className="text-white text-2xl italic">LogOut</h4>
         </div>

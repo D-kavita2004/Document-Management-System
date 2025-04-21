@@ -61,7 +61,7 @@ const GridDocs = ({ table }) => {
                             </div>
                         ))}
                           <DialogFooter className="sm:justify-end">
-                                <Button type="button" className='hover:bg-[#1A33A9] hover:shadow-md shadow-gray-700 text-white transition' onClick={() => setOpenDialog(false)}>
+                                <Button type="button" className='hover:bg-[#1A33A9] hover:shadow-md shadow-gray-700 text-white transition dark:text-black' onClick={() => setOpenDialog(false)}>
                                   Ok
                                 </Button>
                           </DialogFooter>

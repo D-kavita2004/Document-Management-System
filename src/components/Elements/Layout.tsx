@@ -10,7 +10,7 @@ export const Layout = () => {
   return (
     <div className="w-screen overflow-hidden">
       <div className="flex h-full ">
-          {/* Sidebar - stays fixed */}
+          {/* Sidebar - stays fixed for larger screens*/}
           <Navbar displayNav={displayNav} setDisplayNav={setDisplayNav} />
 
           {/* Main Content */}
