@@ -82,7 +82,6 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
       setGlobalFilter(headerSearch);
   },[headerSearch])
 
-
   return (
     <div className="p-5 lg:px-15 max-w-screen object-contain">
 
@@ -156,6 +155,7 @@ const DisplayDocs = ({mockData,columns,headerSearch}) => {
                       id="pageSize"
                       type="number"
                       min={1}
+                      max={100}
                       defaultValue={5}
                       value={table.getState().pagination.pageSize}
                       onChange={(e) =>
