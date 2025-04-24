@@ -1,5 +1,5 @@
-import { mockData } from "@/Constants/Data";
-import { columns } from "@/Constants/Columns";
+// import { mockData } from "@/Constants/Data";
+// import { columns } from "@/Constants/Columns";
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Table } from "../Table";
@@ -7,6 +7,8 @@ import GridDocs from "../GridDocs";
 import { Input } from "@/components/ui/input";
 import {LayoutGrid} from "lucide-react";
 import {List} from "lucide-react";
+import axios from "axios";
+import { useDebounceValue } from 'usehooks-ts'
 
 import {
   useReactTable,
@@ -41,6 +43,7 @@ const SearchDocuments = () => {
     pageIndex: 0,
     pageSize: 5,
   });
+  const [debouncedValue, setValue] = useDebounceValue(globalFilter, 500)
 
   // Tanstack table instance
   const table = useReactTable({
@@ -87,6 +90,15 @@ const SearchDocuments = () => {
   useEffect(()=>{
       setGlobalFilter(query);
   },[query])
+
+  const handleSearchCall = async()=>{
+    const SearchedData = await axios.get(`http://localhost:8080/api/search?searchText=${globalFilter}`)
+    console.log(SearchedData);
+    console.log("Api call made")
+  }
+  useEffect(()=>{
+    handleSearchCall();
+  },[debouncedValue])
 
   return (
       <div className="p-5 lg:px-15 max-w-screen object-contain">
@@ -160,7 +172,6 @@ const SearchDocuments = () => {
                       <Input
                         id="pageSize"
                         type="number"
-                        min={1}
                         max={100}
                         defaultValue={5}
                         value={table.getState().pagination.pageSize}
