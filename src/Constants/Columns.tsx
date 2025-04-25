@@ -1,10 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-// import { FileText } from "lucide-react";
-// import { CalendarDays } from "lucide-react";
-// import { User } from "lucide-react";
-// import { FilePen } from "lucide-react";
-// import { FileType } from "lucide-react";
-
+import dummyData from "./DummmyDocs";
 type Document = {
   [key: string]: string | { [key: string]: string }; // for simplified dynamic typing
   customMetadataMap: {
@@ -19,12 +14,24 @@ function formatFieldName(fieldName) {
   // Add space before capital letters and trim the result
   return cleaned.replace(/([A-Z])/g, " $1").trim();
 }
+let documentKeys: string[] = [];
 
-const documentKeys = [
-      "dID", "dDocName", "dDocAuthor", "dRevLabel", "dDocType", "dSecurityGroup",
-      "dDocAccount", "dDocTitle", "dCheckedOutUser", "dInDate", "folderPath",
-      "parentGUID", "primaryFile", "dOriginalName", "filecontent"
-];
+if(dummyData.length > 0){
+  Object.keys(dummyData[0]).forEach((key) => {
+    documentKeys.push(key);
+
+    // Check for 'customMetadataMap' and push its keys if it exists
+    if (key === "customMetadataMap" && dummyData[0].customMetadataMap) {
+      Object.keys(dummyData[0].customMetadataMap).forEach((nestedKey) => {
+        documentKeys.push(nestedKey);
+      });
+    }
+  }
+)
+
+}
+  
+  console.log(documentKeys);
 
 const columnHelper = createColumnHelper<Document>();
 
