@@ -214,15 +214,16 @@ const SearchDocuments = () => {
                               </DropdownMenu>
                           </div>
 
-                          {/* Layout Change buttons to toggle between table and grid layout*/}
-                          <div className="flex gap-2 border-2 justify-center items-center">
-                              <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9] dark:bg-white"}`} onClick={()=>{setDisplayFormat(true)}}>
-                                  <List className={`size-[6vmin] rounded ${DisplayFormat && "text-white dark:text-black"}`}/>
-                              </div>
-  
-                              <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}} onClick={()=>{setDisplayFormat(false)}}>
-                                  <LayoutGrid className={size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`} />
-                              </div>
+                            {/* Layout Change buttons to toggle between table and grid layout*/}
+                            <div className="flex gap-2 border-2 justify-center items-center">
+                                <div className={`p-1 size-full flex justify-center items-center ${DisplayFormat && "bg-[#1a32a9] dark:bg-white"}`} onClick={()=>{setDisplayFormat(true)}}>
+                                    <List className={`size-[6vmin] rounded ${DisplayFormat && "text-white dark:text-black"}`}/>
+                                </div>
+
+                                <div  className={`p-1 size-full flex justify-center items-center ${!DisplayFormat && "bg-[#1a32a9]  dark:bg-white"}`} onClick={()=>{setDisplayFormat(false)}}>
+                                    <LayoutGrid className={`size-[6vmin] rounded ${!DisplayFormat && "text-white dark:text-black"}`} />
+                                </div>
+                            </div>
                   </div>
             </div>
   
@@ -241,54 +242,54 @@ const SearchDocuments = () => {
                   
                   {/* Pagination */}
                   <div className="flex justify-between px-1 gap-2">
-                  <div className="flex">
-                      <label htmlFor="pageSize" className="text-sm font-medium mt-1 mr-0.5">
-                        Rows per page:
-                      </label>
-                      <Input
-                        id="pageSize"
-                        type="number"
-                        max={100}
-                        defaultValue={5}
-                        value={table.getState().pagination.pageSize}
-                        onChange={(e) =>
-                          setPagination((prev) => ({
-                            ...prev,
-                            pageIndex: 0,
-                            pageSize: Number(e.target.value),
-                          }))
-                        }
-                        
-                        className="w-15 border-blue-900 border-2 dark:border-white"
-                      />
-                  </div>
+                      <div className="flex">
+                          <label htmlFor="pageSize" className="text-sm font-medium mt-1 mr-0.5">
+                            Rows per page:
+                          </label>
+                          <Input
+                            id="pageSize"
+                            type="number"
+                            max={100}
+                            defaultValue={5}
+                            value={table.getState().pagination.pageSize}
+                            onChange={(e) =>
+                              setPagination((prev) => ({
+                                ...prev,
+                                pageIndex: 0,
+                                pageSize: Number(e.target.value),
+                              }))
+                            }
+                            
+                            className="w-15 border-blue-900 border-2 dark:border-white"
+                          />
+                      </div>
 
-                  <div className="flex items-center lg:gap-3 gap-1">
-                      <button
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                        className="px-1 py-1 border rounded disabled:opacity-50"
-                      >
-                        Prev
-                      </button>
-  
-                      <span className="text-sm">
-                        Page{" "}
-                        <strong>
-                          {table.getState().pagination.pageIndex + 1} of{" "}
-                          {table.getPageCount()}
-                        </strong>
-                      </span>
-  
-                      <button
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                        className="px-1 py-1 border rounded disabled:opacity-50"
-                      >
-                        Next
-                      </button>
-                </div>
-            </div>
+                        <div className="flex items-center lg:gap-3 gap-1">
+                            <button
+                              onClick={() => table.previousPage()}
+                              disabled={!table.getCanPreviousPage()}
+                              className="px-1 py-1 border rounded disabled:opacity-50"
+                            >
+                              Prev
+                            </button>
+        
+                            <span className="text-sm">
+                              Page{" "}
+                              <strong>
+                                {table.getState().pagination.pageIndex + 1} of{" "}
+                                {table.getPageCount()}
+                              </strong>
+                            </span>
+        
+                            <button
+                              onClick={() => table.nextPage()}
+                              disabled={!table.getCanNextPage()}
+                              className="px-1 py-1 border rounded disabled:opacity-50"
+                            >
+                              Next
+                            </button>
+                      </div>
+                  </div>
                 </>
               ):
               <div className="flex justify-center items-center h-[55vh]">
