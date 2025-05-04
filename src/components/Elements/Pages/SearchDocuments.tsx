@@ -58,7 +58,15 @@ const SearchDocuments = () => {
     pageSize: 5,
   });
   const [debouncedValue, setValue] = useDebounceValue(globalFilter, 500)
-
+  useEffect(()=>{
+    const processeddata = dummyData.map((obj)=>{
+      const obj2 = {...obj,...obj.customMetadataMap}
+        delete obj2.customMetadataMap;
+        return obj2
+    })
+    console.log(processeddata);
+    setData(processeddata);
+  },[]);
   // Tanstack table instance
   const table = useReactTable({
     data,
@@ -164,7 +172,8 @@ const SearchDocuments = () => {
   
                       </Command>
                   </div>
-
+                  
+                  {/* Filters */}
                   <div className="flex gap-3">
                           {/* Column Filters Button */}
                           <div className="flex justify-center items-center">
