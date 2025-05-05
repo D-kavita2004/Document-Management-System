@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import dummyData from "./DummmyDocs";
+import dummyData from "./DummyDocs";
 
 type Document = {
   [key: string]: string | { [key: string]: string }; // for simplified dynamic typing
@@ -33,7 +33,6 @@ if (dummyData.length > 0) {
 
 // Convert Set to Array
 const documentKeys = Array.from(documentKeysSet);
-console.log(documentKeys);
 
 const columnHelper = createColumnHelper<Document>();
 
