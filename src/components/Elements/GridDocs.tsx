@@ -28,8 +28,8 @@ const GridDocs = ({ table }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-2">
 
         {rows.map((row) => {
-          const nameCell = row.getVisibleCells().find(cell => cell.column.id === 'fileName'); 
-          const dateCell = row.getVisibleCells().find(cell => cell.column.id === 'date'); 
+          const nameCell = row.getVisibleCells().find(cell => cell.column.id === 'dDocName'); 
+          const dateCell = row.getVisibleCells().find(cell => cell.column.id === 'dInDate'); 
 
           return (
             <div
@@ -45,22 +45,22 @@ const GridDocs = ({ table }) => {
                   </DropdownMenu>
 
                   {/* Dialog Component */}
-                  <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Details</DialogTitle>
+                  <Dialog open={openDialog} onOpenChange={setOpenDialog} >
+                      <DialogContent className='max-h-[80vh] overflow-y-auto max-w-[80vw] overflow-x-hidden p-3'>
+                        <DialogHeader className='text-left'>
+                          <DialogTitle className='text-lg underline'>Details</DialogTitle>
                         </DialogHeader>
                         {row.getVisibleCells().map((cell) => (
-                            <div key={cell.id} className="flex gap-4">
-                                <strong className="text-sm flex gap-1 items-center">
+                            <div key={cell.id} className="flex gap-4 flex-wrap">
+                                <strong className="text-md flex gap-1 items-center flex-wrap">
                                   {flexRender(cell.column.columnDef.header, cell.getContext())}:
                                 </strong>
-                                <div>
+                                <div className="flex flex-wrap break-all whitespace-pre-wrap">
                                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                 </div>
                             </div>
                         ))}
-                          <DialogFooter className="sm:justify-end">
+                          <DialogFooter >
                                 <Button type="button" className='hover:bg-[#1A33A9] hover:shadow-md shadow-gray-700 text-white transition dark:text-black' onClick={() => setOpenDialog(false)}>
                                   Ok
                                 </Button>

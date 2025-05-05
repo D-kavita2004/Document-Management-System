@@ -22,6 +22,7 @@ const Header = ({displayNav,setDisplayNav}) => {
   const handleSearch = (e) => {
     if (e.key === "Enter" && HeaderSearch.trim() !== "") {
       navigate(`/Search_Documents?q=${encodeURIComponent(HeaderSearch.trim())}`);
+      setHeaderSearch("");
     }
   };
 
