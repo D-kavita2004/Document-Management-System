@@ -201,6 +201,7 @@ const SearchDocuments = () => {
 
                                             {
                                               table.getAllColumns().map((column)=>{
+                                                console.log(table.getAllColumns());
                                                 return (
                                                   <DropdownMenuCheckboxItem
                                                       key={column.id}
@@ -210,7 +211,8 @@ const SearchDocuments = () => {
                                                         column.toggleVisibility(!column.getIsVisible());
                                                       }}
                                                     >
-                                                      {typeof column.columnDef.header === "function"
+                                                      {
+                                                      typeof column.columnDef.header === "function"
                                                         ? column.columnDef.header()
                                                         : column.columnDef.header ?? column.id}
 
@@ -237,7 +239,7 @@ const SearchDocuments = () => {
             </div>
   
             {
-              globalFilter ?
+              globalFilter && table.getFilteredRowModel().rows.length > 0  ?
               (
                 <>
                   {/* Document Display */}

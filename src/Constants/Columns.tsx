@@ -10,7 +10,7 @@ type Document = {
 
 function formatFieldName(fieldName) {
   // Remove leading "d" or any prefix like "x", "d", etc.
-  const cleaned = fieldName.replace(/^[a-z]+/, "");
+  const cleaned = fieldName.replace(/^[dx]+/, "");
 
   // Add space before capital letters and trim the result
   return cleaned.replace(/([A-Z])/g, " $1").trim();
