@@ -1,5 +1,4 @@
 import dummyData from "@/Constants/DummmyDocs";
-import { columns } from "@/Constants/Columns";
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { Table } from "../Table";
@@ -7,10 +6,9 @@ import GridDocs from "../GridDocs";
 import { Input } from "@/components/ui/input";
 import {LayoutGrid} from "lucide-react";
 import {List} from "lucide-react";
-import axios from "axios";
 import { useDebounceValue } from 'usehooks-ts';
 import { Button } from "@/components/ui/button";
-
+import { useDocTable } from "@/components/Hooks/useDocTable";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -19,14 +17,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-import {
-  useReactTable,
-  getCoreRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-} from "@tanstack/react-table";
 
 import {
   Command,
@@ -39,56 +29,21 @@ import {
 
 const SearchDocuments = () => {
 
+  const {table, globalFilter, setGlobalFilter, setPagination, setData,} = useDocTable();
+
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
+  useEffect(()=>{
+      setGlobalFilter(query);
+  },[query])
 
-  const [DisplayFormat,setDisplayFormat] = useState(true);  //default table will be shown
+  const [DisplayFormat,setDisplayFormat] = useState(false);  //default table will be shown
   const commandRef = useRef(null);
-
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({});
-
-  const [data, setData] = useState(dummyData);
+  
   const [suggestions,setSuggestions] = useState([]);
-  const [sorting,setSorting] = useState([]);
-  const [globalFilter,setGlobalFilter] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 5,
-  });
-  const [debouncedValue, setValue] = useDebounceValue(globalFilter, 500)
-  useEffect(()=>{
-    const processeddata = dummyData.map((obj)=>{
-      const obj2 = {...obj,...obj.customMetadataMap}
-        delete obj2.customMetadataMap;
-        return obj2
-    })
-    console.log(processeddata);
-    setData(processeddata);
-  },[]);
-  // Tanstack table instance
-  const table = useReactTable({
-    data,
-    columns,
-    state:{
-      columnVisibility,
-      sorting,
-      globalFilter,
-      pagination,
-    },
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel:getCoreRowModel(),
-
-    onSortingChange:setSorting,
-    getSortedRowModel:getSortedRowModel(),
-
-    onGlobalFilterChange:setGlobalFilter,
-    getFilteredRowModel:getFilteredRowModel(),
-
-    onPaginationChange:setPagination,
-    getPaginationRowModel: getPaginationRowModel(),
-  });
+  const [debouncedValue] = useDebounceValue(globalFilter, 500)
   
   // Suggestions while searching
   const handleSuggestions = (value) => {
@@ -97,18 +52,6 @@ const SearchDocuments = () => {
     const searchSuggestions = filteredRows.slice(0, 5).map((row) => row.original);
     setSuggestions(searchSuggestions);
   };
-
-  // creating state for the columns
-  useEffect(() => {
-    const visibilityMap: Record<string, boolean> = {};
-    
-    table.getAllColumns().forEach((col) => {
-      if (col.id) {
-        visibilityMap[col.id] = true; // false if you want them hidden by default
-      }
-    });
-    setColumnVisibility(visibilityMap);
-  }, []);
   
   // if you click outside the input box it will close the suggestions
   useEffect(() => {
@@ -117,21 +60,25 @@ const SearchDocuments = () => {
           setSuggestions([]);
         }
       }
-  
       document.addEventListener("mousedown", handleClickOutside);
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
   }, []);
   
-  useEffect(()=>{
-      setGlobalFilter(query);
-  },[query])
 
-  const handleSearchCall = async()=>{
-    // const SearchedData = await axios.get(http://localhost:8080/api/search?searchText=${globalFilter})
-    // console.log(SearchedData);
-    console.log("Api call made")
+  //Search Api Logic
+  const handleSearchCall = ()=>{
+      // const SearchedData = await axios.get(http://localhost:8080/api/search?searchText=${globalFilter})
+      // console.log(SearchedData);
+      console.log("Api call made")
+      const processeddata = dummyData.map((obj)=>{
+        const obj2 = {...obj,...obj.customMetadataMap}
+          delete obj2.customMetadataMap;
+          return obj2
+      })
+      // console.log(processeddata);
+      setData(processeddata);
   }
   useEffect(()=>{
     handleSearchCall();
@@ -155,16 +102,18 @@ const SearchDocuments = () => {
                               <CommandList className="absolute top-full w-[70%] lg:w-[60%] left-0 mt-1 max-h-60 overflow-y-auto rounded-md border bg-background shadow-md z-50">
                               <CommandEmpty className="dark:text-white">No results found.</CommandEmpty>
                               <CommandGroup heading="Suggestions">
-                                {suggestions.map((item, index) => (
-                                  <CommandItem 
+                                {suggestions.map((item, index) => {
+                                  return(
+                                    <CommandItem 
                                     key={index} 
                                     onSelect={() => 
-                                      {setGlobalFilter(item.fileName);
+                                      {setGlobalFilter(item.dDocName);
                                       setSuggestions([]);}} // or item.name, etc.
                                   >
-                                    {item.fileName}
+                                    {item.dDocName}
                                   </CommandItem>
-                                ))}
+                                  )
+                                })}
                               </CommandGroup>
                             </CommandList>
                             )
@@ -201,7 +150,6 @@ const SearchDocuments = () => {
 
                                             {
                                               table.getAllColumns().map((column)=>{
-                                                console.log(table.getAllColumns());
                                                 return (
                                                   <DropdownMenuCheckboxItem
                                                       key={column.id}
@@ -251,8 +199,9 @@ const SearchDocuments = () => {
                       }
                   </div>
                   
-                  {/* Pagination */}
+                  
                   <div className="flex justify-between px-1 gap-2">
+                       {/* Rows per Page */}
                       <div className="flex">
                           <label htmlFor="pageSize" className="text-sm font-medium mt-1 mr-0.5">
                             Rows per page:
@@ -275,6 +224,7 @@ const SearchDocuments = () => {
                           />
                       </div>
 
+                        {/* Page Navigation (pagination) */}
                         <div className="flex items-center lg:gap-3 gap-1">
                             <button
                               onClick={() => table.previousPage()}
