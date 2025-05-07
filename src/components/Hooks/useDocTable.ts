@@ -10,7 +10,7 @@ import {
     } from "@tanstack/react-table";
 
  export const useDocTable = ()=>{
-      const [data, setData] = useState('');
+      const [data, setData] = useState([]);
       const [sorting,setSorting] = useState([]);
       const [globalFilter,setGlobalFilter] = useState("");
       const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>({});

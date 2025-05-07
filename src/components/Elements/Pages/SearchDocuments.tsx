@@ -1,4 +1,4 @@
-import dummyData from "@/Constants/DummyDocs";
+// import dummyData from "@/Constants/DummyDocs";
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Table } from "../Table";
@@ -9,6 +9,7 @@ import { List } from "lucide-react";
 import { useDebounceValue } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import { useDocTable } from "@/components/Hooks/useDocTable";
+import axios from "axios";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -28,8 +29,7 @@ import {
 } from "@/components/ui/command";
 
 const SearchDocuments = () => {
-  const { table, globalFilter, setGlobalFilter, setPagination, setData } =
-    useDocTable();
+  const { table, globalFilter, setGlobalFilter, setPagination, setData } = useDocTable();
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
@@ -43,16 +43,16 @@ const SearchDocuments = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const [debouncedValue] = useDebounceValue(globalFilter, 500);
+  const [debouncedValue] = useDebounceValue(globalFilter, 300);
 
-  const filteredRows = useMemo(() => {
-    return table.getFilteredRowModel().rows;
-  }, [debouncedValue]);
+  // const filteredRows = useMemo(() => {
+  //   return table.getFilteredRowModel().rows;
+  // }, [debouncedValue]);
 
   // Suggestions while searching
   const handleSuggestions = (value) => {
     setGlobalFilter(value);
-    const searchSuggestions = filteredRows.slice(0, 5).map((row) => row.original);
+    const searchSuggestions = table.getCoreRowModel().rows.slice(0, 5).map((row) => row.original);
     setSuggestions(searchSuggestions);
   };
   useEffect(() => {
@@ -73,17 +73,21 @@ const SearchDocuments = () => {
   }, []);
 
   //Search Api Logic
-  const handleSearchCall = () => {
-    // const SearchedData = await axios.get(http://localhost:8080/api/search?searchText=${globalFilter})
-    // console.log(SearchedData);
-    console.log("Api call made");
-    const processeddata = dummyData.map((obj) => {
-      const obj2 = { ...obj, ...obj.customMetadataMap };
-      delete obj2.customMetadataMap;
-      return obj2;
-    });
-    // console.log(processeddata);
-    setData(processeddata);
+  const handleSearchCall = async() => {
+    try{
+      const SearchedData = await axios.get(`http://localhost:8080/api/search?searchText=${debouncedValue}`)
+      console.log(SearchedData.data);
+      const processeddata = SearchedData.data.map((obj) => {
+        const obj2 = { ...obj, ...obj.customMetadataMap };
+        delete obj2.customMetadataMap;
+        return obj2;
+      });
+      console.log(processeddata);
+      setData(processeddata);
+    }
+    catch{
+      alert("Data could not be fetched 😔😔😔😔");
+    }
   };
 
   useEffect(() => {
