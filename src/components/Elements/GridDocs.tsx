@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import {EllipsisVertical} from "lucide-react";
 import { flexRender } from '@tanstack/react-table';
-import axios from "axios";
-import { Separator } from "@/components/ui/separator"
+import { formatFieldName } from '@/Constants/Columns';
+import { fetchDocDetails } from '@/Constants/fetchDocDetails';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -25,21 +25,10 @@ const GridDocs = ({ table }) => {
   const [docDetails,setDocDetails] = useState("");
   const rows = table.getPaginationRowModel().rows;
 
-    //Search Api Logic
-    const fetchDetails = async(id) => {
-      try{
-        const details = await axios.get(`http://localhost:8080/api/content-info/${id}`)
-        console.log(details.data);
-        setDocDetails(details.data);
-      }
-      catch{
-        alert("Data could not be fetched 😔😔😔😔");
-      }
-    };
-    const BringDetails = (id)=>{
-      fetchDetails(id);
+    const BringDetails = async(id)=>{
+      const data = await fetchDocDetails(id);
+      setDocDetails(data);
       setOpenDialog(true);
-      
     }
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-2">
@@ -69,54 +58,19 @@ const GridDocs = ({ table }) => {
                         </DialogHeader>
                         {
                               docDetails && Object.entries(docDetails).map(([key, value]) => {
-                                if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-                                  return (
-                                    <div key={key} className="mt-2">
-                                      <strong className="text-md flex gap-1 items-center flex-wrap text-center">
-                                        {key}
-                                      </strong>
-                                      <Separator className='mb-2'/>
-                                        <div className="ml-4 space-y-2">
-                                          {Object.entries(value).map(([nestedKey, nestedValue]) => (
-                                            <div key={nestedKey} className="flex gap-4 flex-wrap">
-                                              <strong className="text-sm flex gap-1 items-center flex-wrap">
-                                                {nestedKey} :
-                                              </strong>
-                                              <div className="flex flex-wrap break-all whitespace-pre-wrap text-sm">
-                                                {nestedValue !== null && nestedValue !== "" ? nestedValue.toString() : "—"}
-                                              </div>
-                                            </div>
-                                          ))}
-                                        </div>
-                                    </div>
-                                  );
-                                } else {
                                   return (
                                     <div key={key} className="flex gap-4 flex-wrap">
                                       <strong className="text-sm flex gap-1 items-center flex-wrap">
-                                        {key} :
+                                        {formatFieldName(key)} :
                                       </strong>
                                       <div className="flex flex-wrap break-all whitespace-pre-wrap text-sm">
                                         {value !== null && value !== "" ? value.toString() : "—"}
                                       </div>
                                     </div>
                                   );
-                                }
+                          
                               })
                         }
-
-
-
-                        {/* {row.getVisibleCells().map((cell) => (
-                            <div key={cell.id} className="flex gap-4 flex-wrap">
-                                <strong className="text-md flex gap-1 items-center flex-wrap">
-                                  {flexRender(cell.column.columnDef.header, cell.getContext())}:
-                                </strong>
-                                <div className="flex flex-wrap break-all whitespace-pre-wrap">
-                                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </div>
-                            </div>
-                        ))} */}
                           <DialogFooter >
                                 <Button type="button" className='hover:bg-[#1A33A9] hover:shadow-md shadow-gray-700 text-white transition dark:text-black' onClick={() => setOpenDialog(false)}>
                                   Ok

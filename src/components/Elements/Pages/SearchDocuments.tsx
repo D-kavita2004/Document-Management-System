@@ -10,6 +10,7 @@ import { useDebounceValue } from "usehooks-ts";
 import { Button } from "@/components/ui/button";
 import { useDocTable } from "@/components/Hooks/useDocTable";
 import axios from "axios";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -45,14 +46,14 @@ const SearchDocuments = () => {
 
   const [debouncedValue] = useDebounceValue(globalFilter, 300);
 
-  // const filteredRows = useMemo(() => {
-  //   return table.getFilteredRowModel().rows;
-  // }, [debouncedValue]);
+  const filteredRows = useMemo(() => {
+    return table.getFilteredRowModel().rows;
+  }, [debouncedValue]);
 
   // Suggestions while searching
   const handleSuggestions = (value) => {
     setGlobalFilter(value);
-    const searchSuggestions = table.getCoreRowModel().rows.slice(0, 5).map((row) => row.original);
+    const searchSuggestions = filteredRows.slice(0, 5).map((row) => row.original);
     setSuggestions(searchSuggestions);
   };
   useEffect(() => {
@@ -74,21 +75,25 @@ const SearchDocuments = () => {
 
   //Search Api Logic
   const handleSearchCall = async() => {
-    try{
-      const SearchedData = await axios.get(`http://localhost:8080/api/search?searchText=${debouncedValue}`)
-      console.log(SearchedData.data);
-      const processeddata = SearchedData.data.map((obj) => {
-        const obj2 = { ...obj, ...obj.customMetadataMap };
-        delete obj2.customMetadataMap;
-        return obj2;
+    try {
+      const response = await axios.get(`http://localhost:8080/api/search`, {
+        params: { searchText: debouncedValue },
       });
-      console.log(processeddata);
-      setData(processeddata);
-    }
+  
+      if (response.status === 200 && Array.isArray(response.data)) {
+        const processedData = response.data.map((obj) => {
+          const { customMetadataMap = {}, ...rest } = obj;
+          return { ...rest, ...customMetadataMap };
+        });
+        setData(processedData);
+      } else {
+        toast.error(`Unexpected response format or status: ${response.status}`);
+      }
+  }
     catch{
-      alert("Data could not be fetched 😔😔😔😔");
+      toast.error(`Something went wrong`);
     }
-  };
+  }
 
   useEffect(() => {
     if (!debouncedValue.trim()) return; // Prevents call if input is empty or spaces

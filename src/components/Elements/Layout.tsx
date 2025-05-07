@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Navbar from "./Navbar";
-
+import { Toaster } from "sonner";
 
 export const Layout = () => {
   const [displayNav, setDisplayNav] = useState(false);
@@ -24,6 +24,7 @@ export const Layout = () => {
                 {/* <footer>I Am a Footer</footer> */}
           </div>
       </div>
+      <Toaster position="bottom-right" richColors duration={3000}/>
       {/* <div>Footer</div> */}
     </div>
   );

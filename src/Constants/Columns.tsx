@@ -8,7 +8,7 @@ type Document = {
   };
 };
 
-function formatFieldName(fieldName) {
+export function formatFieldName(fieldName) {
   // Remove leading "d" or any prefix like "x", "d", etc.
   const cleaned = fieldName.replace(/^[dx]+/, "");
 
