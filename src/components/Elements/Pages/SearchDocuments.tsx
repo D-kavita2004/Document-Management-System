@@ -1,4 +1,3 @@
-// import dummyData from "@/Constants/DummyDocs";
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { Table } from "../Table";
@@ -51,7 +50,7 @@ const SearchDocuments = () => {
   }, [debouncedValue]);
 
   // Suggestions while searching
-  const handleSuggestions = (value) => {
+  const handleSuggestions = (value:string) => {
     setGlobalFilter(value);
     const searchSuggestions = filteredRows.slice(0, 5).map((row) => row.original);
     setSuggestions(searchSuggestions);
@@ -166,13 +165,17 @@ const SearchDocuments = () => {
                             </DropdownMenuCheckboxItem>
 
                             {table.getAllColumns().map((column) => {
+                              const isLocked = (column.id === "dID" || column.id === "dDocName") ;
                               return (
                                 <DropdownMenuCheckboxItem
                                   key={column.id}
+                                  disabled={isLocked}
                                   checked={column.getIsVisible()}
                                   onSelect={(e) => {
                                     e.preventDefault(); // prevents the dropdown from closing
-                                    column.toggleVisibility(!column.getIsVisible());
+                                    if(!isLocked){
+                                      column.toggleVisibility(!column.getIsVisible());
+                                    }
                                   }}
                                 >
                                   {typeof column.columnDef.header === "function"

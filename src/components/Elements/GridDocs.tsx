@@ -34,7 +34,8 @@ const GridDocs = ({ table }) => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-2">
 
         {rows.map((row) => {
-          const nameCell = row.getVisibleCells().find(cell => cell.column.id === 'dDocName'); 
+          const titleCell = row.getVisibleCells().find(cell => cell.column.id === 'dDocTitle'); 
+          const originalNameCell = row.getVisibleCells().find(cell => cell.column.id === 'dOriginalName'); 
           const dateCell = row.getVisibleCells().find(cell => cell.column.id === 'dInDate'); 
 
           return (
@@ -81,7 +82,18 @@ const GridDocs = ({ table }) => {
 
                   </div>
                   <div className='flex flex-col gap-1.5'>
-                      <div className='font-bold'>{nameCell && flexRender(nameCell.column.columnDef.cell, nameCell.getContext())}</div>
+                      <div className='font-bold'>
+                        {titleCell && flexRender(titleCell.column.columnDef.cell, titleCell.getContext())}
+                        {" "}
+                        {originalNameCell && (
+                          <span>
+                            (
+                              {flexRender(originalNameCell.column.columnDef.cell, originalNameCell.getContext())}
+                            )
+                          </span>
+                        )}
+                      </div>
+                        
                       <div className='text-sm'>{dateCell && flexRender(dateCell.column.columnDef.cell, dateCell.getContext())}</div>
                   </div>
                   
