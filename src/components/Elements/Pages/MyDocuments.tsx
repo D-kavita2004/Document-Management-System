@@ -6,15 +6,6 @@ import {LayoutGrid} from "lucide-react";
 import {List} from "lucide-react";
 import { useDocTable } from "@/components/Hooks/useDocTable";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -23,6 +14,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import dummyData from "@/Constants/DummyDocs";
+import ColumnFilter from "../ColumnFilter";
 
 const MyDocuments = () => {
 
@@ -32,7 +24,7 @@ const MyDocuments = () => {
   const commandRef = useRef(null);
 
   const [suggestions,setSuggestions] = useState([]);
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    
 
   const handleSuggestions = (value) => {
     setGlobalFilter(value);
@@ -103,54 +95,7 @@ const MyDocuments = () => {
                 {/* Filters */}
                 <div className="flex gap-3">
                       {/* Column Filters Button */}
-                      <div className="flex justify-center items-center">
-                        <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-                          <DropdownMenuTrigger>
-                            <Button variant="outline">Filter Columns</Button>
-                          </DropdownMenuTrigger>
-
-                          <DropdownMenuContent className="w-56">
-                            <DropdownMenuLabel>Select Columns:</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-
-                            <DropdownMenuCheckboxItem
-                              onSelect={(e) => {
-                                e.preventDefault();
-                                const allVisible = table
-                                  .getAllColumns()
-                                  .every((col) => col.getIsVisible());
-                                table
-                                  .getAllColumns()
-                                  .forEach((col) => col.toggleVisibility(!allVisible));
-                              }}
-                              className="font-semibold"
-                            >
-                              Toggle All
-                            </DropdownMenuCheckboxItem>
-
-                            {table.getAllColumns().map((column) => {
-                              const isLocked = (column.id === "dID" || column.id === "dDocName") ;
-                              return (
-                                <DropdownMenuCheckboxItem
-                                  key={column.id}
-                                  disabled={isLocked}
-                                  checked={column.getIsVisible()}
-                                  onSelect={(e) => {
-                                    e.preventDefault(); // prevents the dropdown from closing
-                                    if(!isLocked){
-                                      column.toggleVisibility(!column.getIsVisible());
-                                    }
-                                  }}
-                                >
-                                  {typeof column.columnDef.header === "function"
-                                    ? column.columnDef.header()
-                                    : column.columnDef.header ?? column.id}
-                                </DropdownMenuCheckboxItem>
-                              );
-                            })}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
+                      <ColumnFilter table={table}/>
 
                       {/* Layout Change buttons to toggle between table and grid layout*/}
                       <div className="flex gap-2 border-2 justify-center items-center">
