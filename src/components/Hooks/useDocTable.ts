@@ -18,17 +18,24 @@ import {
             pageIndex: 0,
             pageSize: 5,
           });
+      const [columnOrder, setColumnOrder] = useState<string[]>([]);
 
         // creating state for the columns
-      useEffect(() => {
+        useEffect(() => {
           const visibilityMap: Record<string, boolean> = {};
+          const order: string[] = [];
+        
           table.getAllColumns().forEach((col) => {
             if (col.id) {
-              visibilityMap[col.id] = true; // false if you want them hidden by default
+              visibilityMap[col.id] = true;
+              order.push(col.id);
             }
           });
+        
           setColumnVisibility(visibilityMap);
-      }, []);
+          setColumnOrder(order);
+        }, []);
+        
       
       const table = useReactTable({
       data,
@@ -38,7 +45,11 @@ import {
             sorting,
             globalFilter,
             pagination,
+            columnOrder,
       },
+
+      onColumnOrderChange: setColumnOrder,
+
       onColumnVisibilityChange: setColumnVisibility,
       getCoreRowModel:getCoreRowModel(),
 
