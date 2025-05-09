@@ -1,5 +1,4 @@
-import React from 'react';
-import { ChartComponent } from '../ChartComponent';
+import { ChartComponent } from '../ReusableComponents/ChartComponent';
 
 const Dashboard = () => {
   return (

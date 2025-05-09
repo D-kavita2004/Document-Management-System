@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Table } from "../Table";
-import GridDocs from "../GridDocs";
+import { Table } from "../ReusableComponents/Table";
+import GridDocs from "../ReusableComponents/GridDocs";
 import { Input } from "@/components/ui/input";
 import {LayoutGrid} from "lucide-react";
 import {List} from "lucide-react";
@@ -16,7 +16,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 // import dummyData from "@/Constants/DummyDocs";
-import ColumnFilter from "../ColumnFilter";
+import ColumnFilter from "../ReusableComponents/ColumnFilter";
 
 const MyDocuments = () => {
 

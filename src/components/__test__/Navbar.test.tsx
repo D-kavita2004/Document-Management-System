@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import Navbar from "../Elements/Navbar"; 
+import Navbar from "../ReusableComponents/Navbar"; 
 
 const renderNavbar = (displayNav = true, pathname = "/") => {
   const mockSetDisplayNav = vi.fn();

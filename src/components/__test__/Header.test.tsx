@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import Header from "../Elements/Header";
 import { describe, beforeEach, expect, it, vi, beforeAll } from "vitest";
-import { ThemeProvider } from "../Elements/theme-provider";
+import { ThemeProvider } from "../ReusableComponents/theme-provider";
 import '@testing-library/jest-dom';
 
 // Mock useNavigate

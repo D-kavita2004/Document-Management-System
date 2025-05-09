@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import GridDocs from "../Elements/GridDocs";
+import GridDocs from "../ReusableComponents/GridDocs";
 import { vi,describe,expect,test } from "vitest";
 
 // Mock flexRender to just return the value from context

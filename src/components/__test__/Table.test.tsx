@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi,describe,expect,it} from "vitest";
-import { Table } from "../Elements/Table"; 
+import { Table } from "../ReusableComponents/Table"; 
 
 // ✅ Mock flexRender to return value from context
 vi.mock("@tanstack/react-table", async () => {

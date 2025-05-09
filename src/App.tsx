@@ -1,10 +1,10 @@
-import { Layout } from './components/Elements/Layout';
+import { Layout } from './components/ReusableComponents/Layout';
 import { BrowserRouter,Route,Routes } from 'react-router-dom';
-import Dashboard from './components/Elements/Pages/Dashboard';
-import MyDocuments from './components/Elements/Pages/MyDocuments';
-import UploadDocuments from './components/Elements/Pages/UploadDocuments';
-import SearchDocuments from './components/Elements/Pages/SearchDocuments';
-import Login from './components/Elements/Pages/Login';
+import Dashboard from './components/Pages/Dashboard';
+import MyDocuments from './components/Pages/MyDocuments';
+import UploadDocuments from './components/Pages/UploadDocuments';
+import SearchDocuments from './components/Pages/SearchDocuments';
+import Login from './components/Pages/Login';
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useState, useEffect, useRef, useMemo } from "react";
-import { Table } from "../Table";
-import GridDocs from "../GridDocs";
+import { Table } from "../ReusableComponents/Table";
+import GridDocs from "../ReusableComponents/GridDocs";
 import { Input } from "@/components/ui/input";
 import { LayoutGrid } from "lucide-react";
 import { List } from "lucide-react";
@@ -9,7 +9,7 @@ import { useDebounceValue } from "usehooks-ts";
 import { useDocTable } from "@/components/Hooks/useDocTable";
 import axios from "axios";
 import { toast } from "sonner";
-import ColumnFilter from "../ColumnFilter";
+import ColumnFilter from "../ReusableComponents/ColumnFilter";
 import {
   Command,
   CommandEmpty,
