@@ -3,6 +3,17 @@ import { ArrowUpDown } from 'lucide-react';
 import { useDragableColumns } from '../Hooks/useDragableColumns';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { fetchDownloadApi } from '@/Constants/fetchDownloadApi';
+import { fetchDocDetails } from '@/Constants/fetchDocDetails';
+import { DetailsDialog } from './DetailsDialog';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+
+} from "@/components/ui/dropdown-menu";
+import { useState } from 'react';
 
 const DraggableHeader = ({ header }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -33,6 +44,15 @@ const DraggableHeader = ({ header }) => {
 };
 
 export const Table = ({ table }) => {
+  const [openDialog,setOpenDialog] = useState(false);
+  const [docDetails,setDocDetails] = useState("");
+
+  const BringDetails = async(id)=>{
+    const data = await fetchDocDetails(id);
+    setOpenDialog(true);
+    setDocDetails(data);   
+  }
+
   const {
     DndContext,
     SortableContext,
@@ -48,27 +68,44 @@ export const Table = ({ table }) => {
       <table className="border-collapse w-full h-full">
         <thead className="bg-[#1A33A9] dark:bg-white dark:text-black text-white sticky top-0 z-10">
           {table.getHeaderGroups().map((headerGroup) => (
-            <SortableContext
-              key={headerGroup.id}
-              items={sortableHeaders.find(g => g.id === headerGroup.id)?.headers ?? []}
-              strategy={verticalListSortingStrategy}
-            >
+
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <DraggableHeader key={header.id} header={header} />
-                ))}
+                  <th>Tools</th>
+                  <SortableContext
+                    key={headerGroup.id}
+                    items={sortableHeaders.find(g => g.id === headerGroup.id)?.headers ?? []}
+                    strategy={verticalListSortingStrategy}
+                  >  
+                      {headerGroup.headers.map((header) => (
+                        <DraggableHeader key={header.id} header={header} />
+                      ))}
+                  </SortableContext>
+               
               </tr>
-            </SortableContext>
           ))}
         </thead>
         <tbody>
           {table.getPaginationRowModel().rows.map((row) => (
             <tr key={row.id} className="even:bg-gray-200 dark:bg-[#3b3636]">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="border border-gray-300 px-4 py-2 whitespace-nowrap">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+
+                <td className='p-2 text-red-500'>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>Actions</DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem onClick={()=>{BringDetails(row.original.dID)}}>Details</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{fetchDownloadApi(row.original.dID)}}>Download</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                        {/* Dialog Component */}
+                        <DetailsDialog openDialog={openDialog} setOpenDialog={setOpenDialog} docDetails={docDetails}/>                    
                 </td>
-              ))}
+
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="border border-gray-300 px-4 py-2 whitespace-nowrap">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
             </tr>
           ))}
         </tbody>

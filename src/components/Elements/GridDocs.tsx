@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Button } from '../ui/button';
 import {EllipsisVertical} from "lucide-react";
 import { flexRender } from '@tanstack/react-table';
-import { formatFieldName } from '@/Constants/Columns';
 import { fetchDocDetails } from '@/Constants/fetchDocDetails';
+import { fetchDownloadApi } from '@/Constants/fetchDownloadApi';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,15 +10,15 @@ import {
   DropdownMenuItem,
 
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter
-} from "@/components/ui/dialog"
-import axios from 'axios';
- 
+import { DetailsDialog } from './DetailsDialog';
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogFooter
+// } from "@/components/ui/dialog"
+
 const GridDocs = ({ table }) => {
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -34,21 +33,18 @@ const GridDocs = ({ table }) => {
 
     // File Download Api logic 
     const handleDownloadDirect = (id) => {
-      const link = document.createElement('a');
-      link.href = `http://localhost:8080/api/getfile/${id}`;
-      link.download = ''; // Let browser decide based on server's Content-Disposition
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      fetchDownloadApi(id);
     };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-2">
 
         {rows.map((row) => {
-          const titleCell = row.getVisibleCells().find(cell => cell.column.id === 'dDocTitle'); 
-          const originalNameCell = row.getVisibleCells().find(cell => cell.column.id === 'dOriginalName'); 
-          const dateCell = row.getVisibleCells().find(cell => cell.column.id === 'dInDate'); 
+            const allCells = row.getAllCells();
+
+            const titleCell = allCells.find(cell => cell.column.id === 'dDocTitle');
+            const originalNameCell = allCells.find(cell => cell.column.id === 'dOriginalName');
+            const dateCell = allCells.find(cell => cell.column.id === 'dInDate');
 
           return (
             <div
@@ -64,7 +60,9 @@ const GridDocs = ({ table }) => {
                         </DropdownMenu>
 
                         {/* Dialog Component */}
-                        <Dialog open={openDialog} onOpenChange={setOpenDialog} >
+                        <DetailsDialog openDialog={openDialog} setOpenDialog={setOpenDialog} docDetails={docDetails}/>
+
+                        {/* <Dialog open={openDialog} onOpenChange={setOpenDialog} >
                             <DialogContent className='max-h-[80vh] overflow-y-auto max-w-[80vw] overflow-x-hidden p-3'>
                               <DialogHeader className='text-left'>
                                 <DialogTitle className='text-lg underline mx-auto'>Details</DialogTitle>
@@ -90,11 +88,11 @@ const GridDocs = ({ table }) => {
                                       </Button>
                                 </DialogFooter>
                             </DialogContent>
-                        </Dialog>
+                        </Dialog> */}
 
                   </div>
-                  <div className='flex flex-col gap-1.5 max-w-[90%]'>
-                        <div className='font-bold cursor-pointer inline' onClick={()=>{handleDownloadDirect(row.original.dID)}}>
+                  <div className='flex flex-col gap-1.5 max-w-[90%] justify-between'>
+                        <div className='font-bold cursor-pointer inline flex-wrap break-all' onClick={()=>{handleDownloadDirect(row.original.dID)}}>
                           {titleCell && flexRender(titleCell.column.columnDef.cell, titleCell.getContext())}
                           {" "}
                           {originalNameCell && (
