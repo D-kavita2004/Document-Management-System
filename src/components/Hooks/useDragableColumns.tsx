@@ -23,7 +23,6 @@ import {
         const oldIndex = allLeafColumns.findIndex(c => c.id === active.id);
         const newIndex = allLeafColumns.findIndex(c => c.id === over.id);
         
-    
         table.setColumnOrder((old: string[]) => arrayMove(old, oldIndex, newIndex));
       };
     
