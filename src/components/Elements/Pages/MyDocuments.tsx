@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import {LayoutGrid} from "lucide-react";
 import {List} from "lucide-react";
 import { useDocTable } from "@/components/Hooks/useDocTable";
+import axios from "axios";
+import { toast } from "sonner";
 import {
   Command,
   CommandEmpty,
@@ -13,7 +15,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import dummyData from "@/Constants/DummyDocs";
+// import dummyData from "@/Constants/DummyDocs";
 import ColumnFilter from "../ColumnFilter";
 
 const MyDocuments = () => {
@@ -46,13 +48,28 @@ const MyDocuments = () => {
       };
   }, []);
 
+    //Search Api Logic
+    const getMyDocuments = async() => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/search?searchText=weblogic`);
+    
+        if (response.status === 200 && Array.isArray(response.data)) {
+          const processedData = response.data.map((obj) => {
+            const { customMetadataMap = {}, ...rest } = obj;
+            return { ...rest, ...customMetadataMap };
+          });
+          setData(processedData);
+        } else {
+          toast.error(`Unexpected response format or status: ${response.status}`);
+        }
+    }
+      catch{
+        toast.error(`Something went wrong`);
+      }
+    }
+
   useEffect(()=>{
-    const processedData = dummyData.map((obj) => {
-      const { customMetadataMap = {}, ...rest } = obj;
-      return { ...rest, ...customMetadataMap };
-     })
-     console.log("My Documents ",processedData);
-     setData(processedData);
+    getMyDocuments();
   },[])
 
   return (
@@ -199,7 +216,7 @@ const MyDocuments = () => {
         </>
       ) : (
         <div className="flex justify-center items-center h-[55vh]">
-          <h2 className="text-lg font-semibold">You Have not Uploaded any Document yet</h2>
+          <h2 className="text-lg font-semibold">You Have not Uploaded any Documents yet</h2>
         </div>
       )}
     </div>
