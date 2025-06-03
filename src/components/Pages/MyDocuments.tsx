@@ -7,6 +7,7 @@ import {List} from "lucide-react";
 import { useDocTable } from "@/components/Hooks/useDocTable";
 import axios from "axios";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -21,7 +22,7 @@ import ColumnFilter from "../ReusableComponents/ColumnFilter";
 const MyDocuments = () => {
 
   const { table, globalFilter, setGlobalFilter, setPagination, setData } = useDocTable();
-  
+  const [isLoading,setIsLoading] = useState(false);
   const [DisplayFormat,setDisplayFormat] = useState(true);  //default table will be shown
   const commandRef = useRef(null);
 
@@ -49,7 +50,8 @@ const MyDocuments = () => {
   }, []);
 
     //Search Api Logic
-    const getMyDocuments = async() => {
+  const getMyDocuments = async() => {
+      setIsLoading(true);
       try {
         const response = await axios.get(`http://localhost:8080/api/search?searchText=weblogic`);
     
@@ -59,6 +61,7 @@ const MyDocuments = () => {
             return { ...rest, ...customMetadataMap };
           });
           setData(processedData);
+          setIsLoading(false);
         } else {
           toast.error(`Unexpected response format or status: ${response.status}`);
         }
@@ -216,7 +219,10 @@ const MyDocuments = () => {
         </>
       ) : (
         <div className="flex justify-center items-center h-[55vh]">
-          <h2 className="text-lg font-semibold">You Have not Uploaded any Documents yet</h2>
+          {
+            isLoading ? 
+            <Loader2 className="mr-2 h-10 w-10 animate-spin" />:<h2 className="text-lg font-semibold">You Have not Uploaded any Documents yet</h2>
+          }
         </div>
       )}
     </div>

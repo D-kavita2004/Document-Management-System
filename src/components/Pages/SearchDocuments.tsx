@@ -10,6 +10,7 @@ import { useDocTable } from "@/components/Hooks/useDocTable";
 import axios from "axios";
 import { toast } from "sonner";
 import ColumnFilter from "../ReusableComponents/ColumnFilter";
+import { Loader2 } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -21,7 +22,7 @@ import {
 
 const SearchDocuments = () => {
   const { table, globalFilter, setGlobalFilter, setPagination, setData } = useDocTable();
-
+  const [isLoading,setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   useEffect(() => {
@@ -63,6 +64,7 @@ const SearchDocuments = () => {
 
   //Search Api Logic
   const handleSearchCall = async() => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`http://localhost:8080/api/search`, {
         params: { searchText: debouncedValue },
@@ -74,6 +76,7 @@ const SearchDocuments = () => {
           return { ...rest, ...customMetadataMap };
         });
         setData(processedData);
+        setIsLoading(false);
       } else {
         toast.error(`Unexpected response format or status: ${response.status}`);
       }
@@ -232,7 +235,11 @@ const SearchDocuments = () => {
         </>
       ) : (
         <div className="flex justify-center items-center h-[55vh]">
-          <h2 className="text-lg font-semibold">No Search Results</h2>
+          {
+            isLoading ? 
+            (<Loader2 className="mr-2 h-10 w-10 animate-spin" />):<h2 className="text-lg font-semibold">No Search Results</h2>
+          }
+          
         </div>
       )}
     </div>
