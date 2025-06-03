@@ -13,7 +13,8 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
         { path: "/", label: "Dashboard" },
         { path: "/My_Documents", label: "My Documents" },
         { path: "/Upload_Documents", label: "Upload Documents" },
-        { path: "/Search_Documents", label: "Search Documents" }
+        { path: "/Search_Documents", label: "Search Documents" },
+        { path: "/Admin_Settings", label: "Admin Settings" }
     ];
 
     

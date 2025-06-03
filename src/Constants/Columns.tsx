@@ -32,7 +32,7 @@ if (dummyData.length > 0) {
 }
 
 // Convert Set to Array
-const documentKeys = Array.from(documentKeysSet);
+export const documentKeys = Array.from(documentKeysSet);
 
 const columnHelper = createColumnHelper<Document>();
 
