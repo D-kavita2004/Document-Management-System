@@ -8,6 +8,9 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
     const handleNavDisplay = ()=>{
         setDisplayNav(false);
     }
+    const afterNavigation = ()=>{
+        setDisplayNav(false);
+    }
 
     const menuItems = [
         { path: "/", label: "Dashboard" },
@@ -41,7 +44,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
                         className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
                             ${item.path === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}
                         >
-                        <Link className="cursor-pointer" to={item.path}>
+                        <Link className="cursor-pointer" to={item.path} onClick={afterNavigation}>
                             {item.label}
                         </Link>
                         </div>
