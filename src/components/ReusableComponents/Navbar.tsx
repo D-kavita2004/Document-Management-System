@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import { Link, useLocation } from "react-router-dom";
+import { Label } from 'recharts';
 
 const Navbar = ({ displayNav , setDisplayNav }) => {
 
@@ -17,7 +18,8 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
         { path: "/My_Documents", label: "My Documents" },
         { path: "/Upload_Documents", label: "Upload Documents" },
         { path: "/Search_Documents", label: "Search Documents" },
-        { path: "/Admin_Settings", label: "Admin Settings" }
+        { path: "/Admin_Settings", label: "Admin Settings" },
+        {path: "/Profile_Settings" , label: "Profile Settings"}
     ];
 
     
@@ -36,7 +38,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
         <h3 className="text-2xl text-white text-center lg:mx-4 mt-4 font-bold cursor-pointer italic"><a href='https://www.smartcodersconsulting.com/' target='_blank'>SmartCoders Consulting Pvt. Ltd.</a></h3>
 
         {/* Navigation Menus */}
-        <div className="mt-8 p-2 flex-grow">
+        <div className="mt-5 p-2 flex-grow">
                 {
                     menuItems.map((item)=>(
                         <div
@@ -54,7 +56,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
         </div>
 
         {/* Logout Button */}
-        <div className="mt-auto p-3 text-center">
+        <div className="mt-auto p-3 text-center relative bottom-2">
              <h4 className="text-white text-2xl italic">LogOut</h4>
         </div>
     </nav>

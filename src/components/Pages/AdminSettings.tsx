@@ -22,7 +22,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 const AdminSettings = () => {
@@ -121,7 +120,7 @@ useEffect(() => {
       </div>
 
       {/* Attributes Table */}
-      <div className="max-h-[85%] pt-2 flex justify-evenly overflow-auto md:max-w-[70%] mx-auto max-w-[90%]">
+      <div className="max-h-[85%] flex justify-evenly overflow-auto md:max-w-[70%] mx-auto max-w-[90%]">
         <table className="border-collapse w-full h-full">
           <thead className="bg-[#1A33A9] dark:bg-white dark:text-black text-white sticky top-0 z-10">
             <tr>
@@ -178,8 +177,6 @@ useEffect(() => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-
     </div>
   );
 };

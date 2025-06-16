@@ -6,6 +6,7 @@ import UploadDocuments from './components/Pages/UploadDocuments';
 import SearchDocuments from './components/Pages/SearchDocuments';
 import Login from './components/Pages/Login';
 import AdminSettings from './components/Pages/AdminSettings';
+import ProfileSettings from './components/Pages/ProfileSettings';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path='/Upload_Documents' element={<UploadDocuments/>}></Route>
                     <Route path='/Search_Documents' element={<SearchDocuments/>}></Route>
                     <Route path='/Admin_Settings' element={<AdminSettings/>}></Route>
+                    <Route path='/Profile_Settings' element={<ProfileSettings/>}></Route>
                 </Route>
             </Routes>
       </BrowserRouter>
