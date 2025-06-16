@@ -1,13 +1,28 @@
-require("dotenv").config()
-const express = require('express')
+import dotenv from "dotenv";
+import express from "express";
+import profileRoutes from "./src/routes/profile.routes.js"
+import attributeRoutes from "./src/routes/attribute.routes.js";
+import connectDB from "./src/config/db.js";
+import cors from "cors";
+
+dotenv.config();
+connectDB();
 const app = express()
+
+app.use(cors({
+  origin: "http://localhost:5173", 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
+app.use(express.json());
+
 const port = process.env.PORT || 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-app.get("/login",(req,res)=>{
-      res.send("Login Here !!!")
+app.use("/profile",profileRoutes);
+app.use("/attribute",attributeRoutes);
+
+//Static route
+app.get("/",(req,res)=>{
+  res.send("Hello world");
 })
 
 app.listen(port, () => {
