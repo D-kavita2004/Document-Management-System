@@ -12,12 +12,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const ProfileSettings = () => {
   const [profiles, setProfiles] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); //profile dialog
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [purpose,setPurpose] = useState(null);
   const [openAlert,setopenAlert] = useState(false);
@@ -26,13 +26,14 @@ const ProfileSettings = () => {
 
   const handleGetProfiles = async () => {
     try {
-      const allProfiles = await axios.get("http://localhost:4000/profile/getProfiles");
+      const res = await axios.get("http://localhost:4000/profile/AllProfiles");
+      console.log(res.data);
 
-      if (allProfiles.status === 200) {
-        setProfiles(allProfiles?.data?.data);
+      if (res.status === 200) {
+        setProfiles(res?.data?.data);
       }
     } catch (error) {
-      console.log(error);
+        toast.error("Oops!!! Something went wrong");
     }
   };
 
@@ -43,9 +44,11 @@ const ProfileSettings = () => {
       if (res.status === 200 || res.status === 201) {
         handleGetProfiles(); // trigger profile refresh
         setopenAlert(false); // close the dialog
+        toast.success(res.data.message);
       }
     } catch (error) {
-      console.error("Error adding profile:", error);
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -74,7 +77,7 @@ const ProfileSettings = () => {
         open={open}
         setOpen={setOpen}
         onSuccess={handleGetProfiles} // refresh data after success
-        profileID = {selectedProfile}
+        profileData = {selectedProfile}
         purpose={purpose}
       />
 
@@ -119,7 +122,7 @@ const ProfileSettings = () => {
                 <td className="border border-gray-300 px-2 py-1 min-w-[150px]">
                   <div className="flex justify-evenly">
                     <UserPen onClick={() => {
-                      setSelectedProfile(item.profileId);
+                      setSelectedProfile(item);
                       setPurpose("updateProfile")
                       setOpen(true);
                     }} />

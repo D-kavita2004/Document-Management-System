@@ -11,11 +11,17 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useRef } from "react";
+import { toast } from "sonner";
+import { useState } from "react";
+import { useEffect } from "react";
 
-const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profileID }) => {
+const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profileData }) => {
   const profileIdRef = useRef<HTMLInputElement>(null);
   const profileNameRef = useRef<HTMLInputElement>(null);
+  const [errorId,setErrorId] = useState("");
+  const [errorName,setErrorName]  = useState("");
 
+// add profile api
   const handleAddProfile = async (e) => {
     e.preventDefault();
 
@@ -31,11 +37,15 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
       if (res.status === 200 || res.status === 201) {
         onSuccess(); // trigger profile refresh
         setOpen(false); // close the dialog
+        toast.success(res.data.message);
       }
     } catch (error) {
-      console.error("Error adding profile:", error);
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
+
+// update profile api
     const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
@@ -50,20 +60,60 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
       if (res.status === 200 || res.status === 201) {
         onSuccess(); // trigger profile refresh
         setOpen(false); // close the dialog
+        toast.success(res.data.message);
       }
     } catch (error) {
-      console.error("Error adding profile:", error);
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
-  const handleSubmit = (e)=>{
-      if(purpose=="addProfile"){
-            handleAddProfile(e);
-      }
-      if(purpose=="updateProfile"){
-            handleUpdateProfile(e);
-      }
-      
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  const isValid = validateFields();
+
+  if (!isValid) return;
+
+  if (purpose === "addProfile") {
+    handleAddProfile(e);
+  } else if (purpose === "updateProfile") {
+    handleUpdateProfile(e);
   }
+};
+
+
+const validateFields = () => {
+  let isValid = true;
+  setErrorId("");
+  setErrorName("");
+
+  const profileId = profileIdRef?.current?.value;
+  const profileName = profileNameRef?.current?.value;
+
+  // Validate profile name
+  if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/.test(profileName)) {
+    setErrorName("Name must start with a letter and contain only letters, numbers, or hyphens.");
+    isValid = false;
+  }
+
+  // Validate profile ID
+  const parsedId = parseInt(profileId, 10);
+  if (!Number.isInteger(parsedId) || parsedId <= 0 || profileId.length > 10) {
+    setErrorId("Profile ID must be a positive whole number with at most 10 digits");
+    isValid = false;
+  }
+
+  return isValid;
+};
+
+useEffect(() => {
+  if (open) {
+    setErrorId("");
+    setErrorName("");
+  }
+}, [open]);
+
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -74,30 +124,34 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="id">ID</Label>
-              <input
-                id="id"
-                placeholder="Enter id..."
-                required
-                defaultValue={purpose=="updateProfile"?profileID:""}
-                readOnly={purpose==="updateProfile"}
-                ref={profileIdRef}
-                className="border-2 rounded-sm px-5 py-1"
-              />
+            <div className="grid gap-4">
+                  <div className="grid gap-3">
+                    <Label htmlFor="id">ID</Label>
+                    <input
+                      id="id"
+                      placeholder="Enter id..."
+                      required
+                      defaultValue={purpose=="updateProfile"?profileData.profileId:""}
+                      readOnly={purpose==="updateProfile"}
+                      ref={profileIdRef}
+                      className="border-2 rounded-sm px-5 py-1"
+                      disabled={purpose==="updateProfile"}
+                    />
+                    {errorId && <p className="text-red-600 text-sm">{errorId}</p>}
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="profile">Profile</Label>
+                    <input
+                      id="profile"
+                      placeholder="Enter profile..."
+                      defaultValue={purpose=="updateProfile"?profileData.profileName:""}
+                      required
+                      ref={profileNameRef}
+                      className="border-2 rounded-sm px-5 py-1"
+                    />
+                    {errorName && <p className="text-red-600 text-sm">{errorName}</p>}
+                  </div>
             </div>
-            <div className="grid gap-3">
-              <Label htmlFor="profile">Profile</Label>
-              <input
-                id="profile"
-                placeholder="Enter profile..."
-                required
-                ref={profileNameRef}
-                className="border-2 rounded-sm px-5 py-1"
-              />
-            </div>
-          </div>
           <DialogFooter className="mt-4">
             <DialogClose asChild>
               <Button type="button" variant="outline">Cancel</Button>
