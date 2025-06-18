@@ -1,90 +1,128 @@
 import {Profile} from "../models/profile.models.js";
 
-export const addProfile = async (req, res) => {
+export const addProfile = async (req, res, next) => {
   try {
     const { profileId, profileName } = req.body;
+    const parsedId = Number(profileId);
+
+    if(!profileId || !profileName){
+      return res.status(400).json({
+        success: false,
+        message:"Missing Data"
+      })
+    } 
+
+    if (!Number.isInteger(parsedId) || parsedId <= 0 || profileId.toString().length > 10) {
+      return res.status(400).json({
+        success: false,
+        message: "Profile ID must be a positive whole number with at most 10 digits"
+      });
+    }
+
+    if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/.test(profileName)) {
+      return res.status(400).json({
+        success: false,
+        message: "Name must start with a letter and contain only letters, numbers, hyphens or underscores."
+      });
+    }
+    const existingId = await Profile.findOne({profileId})
+    if(existingId){
+          return res.status(409).json({
+          success: false,
+          message: "Profile ID already exists",
+        });
+    }
+
+    const existingName = await Profile.findOne({profileName})
+    if(existingName){
+          return res.status(409).json({
+          success: false,
+          message: "Profile Name already exists",
+        });
+    }
+
     const new_profile = new Profile({ profileId, profileName });
 
     const saved_profile = await new_profile.save();
 
-    res.status(201).json({
+    if(saved_profile){
+      return res.status(201).json({
       success: true,
       data: saved_profile,
       message: "Profile created successfully"
     });
+    }
     
   } catch (error) {
-
-    res.status(400).json({
-      success: false,
-      message: error.message,
-      errorDetails: error
-    });
+      next(error);
   }
 };
 
 
-export const deleteProfile = async (req, res) => {
+export const deleteProfile = async (req, res, next) => {
   try {
     const profileId = req.params.profileId;
 
     const deletedProfile = await Profile.findOneAndDelete({ profileId });
 
     if (!deletedProfile) {
-      return res.status(404).json({ message: "Profile not found" });
+      return res.status(404).json({ 
+        success:false,
+        message: "Profile not found" });
     }
 
     res.status(200).json({
+      success:true,
       message: "Profile deleted successfully",
-      profile: deletedProfile,
     });
   } 
   catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
+    next(error);
   }
 };
 
 
-export const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res , next) => {
   try {
     const { profileId } = req.params; // we expect profileId in the URL
     const { profileName } = req.body; // updated data in the body
 
-    const updatedProfile = await Profile.findOneAndUpdate(
-      { profileId }, // filter
-      { profileName }, // update
-      {
-        new: true,         // return updated document
-        runValidators: true // to enforce schema validations
-      }
-    );
+    if(!/^[a-zA-Z][a-zA-Z0-9-_]*$/.test(profileName)){
+      return res.status(400).json({
+        success: false,
+        message:"Name must start with a letter and contain only letters, numbers, hyphens or underscores."
+      })
+    }
+
+    const updatedProfile = await Profile.findOneAndUpdate({ profileId },{ profileName });
 
     if (!updatedProfile) {
-      return res.status(404).json({ message: "Profile not found" });
+      return res.status(404).json({ 
+        success: false,
+        message: "Profile not found" });
     }
 
     res.status(200).json({
+      success:true,
       message: "Profile updated successfully",
-      profile: updatedProfile,
+      data: updatedProfile,
     });
 
-  } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
+  }  catch (error) {
+    next(error);
   }
 };
 
-export const getAllProfiles = async (req, res) => {
+export const AllProfiles = async (req, res, next) => {
   try {
     const profiles = await Profile.find(); // fetches all documents
     res.status(200).json({
+      success:true,
       message: "All profiles fetched successfully",
       count: profiles.length,
       data: profiles,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Server Error",
-      error: error.message,
-    });
+    next(error);
   }
 };
