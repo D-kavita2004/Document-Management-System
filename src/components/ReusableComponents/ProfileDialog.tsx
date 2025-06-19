@@ -92,16 +92,16 @@ const validateFields = () => {
 
   // Validate profile name
   if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/.test(profileName)) {
-    setErrorName("Name must start with a letter and contain only letters, numbers, or hyphens.");
+    setErrorName("Name must start with a letter and contain only letters, numbers, hyphens or underscores.");
     isValid = false;
   }
 
   // Validate profile ID
-  const parsedId = parseInt(profileId, 10);
-  if (!Number.isInteger(parsedId) || parsedId <= 0 || profileId.length > 10) {
-    setErrorId("Profile ID must be a positive whole number with at most 10 digits");
+  if (!/^\d{1,10}$/.test(profileId)) {
+    setErrorId("Profile ID must be a string of up to 10 numeric digits");
     isValid = false;
   }
+
 
   return isValid;
 };

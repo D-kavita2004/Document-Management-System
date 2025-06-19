@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { documentKeys } from '@/Constants/Columns';
+// import { documentKeys } from '@/Constants/Columns';
 import { Label } from '../ui/label';
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
@@ -22,7 +22,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
+import axios from "axios";
 
 const AdminSettings = () => {
 
@@ -33,27 +35,23 @@ const AdminSettings = () => {
 };
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [initialState, setInitialState] = useState<Attribute[]>([]);
-
+  const [profileList,setProfileList] = useState([]);
   const [showDialog,setShowDialog] = useState(false);
   const [changesSaved,setChangesSaved] = useState(false);
-  const [profile,setProfile] = useState("Admin");
+  const [profile,setProfile] = useState("");
   const [changeInAttr,setChangeInAttr] = useState(false);
+  const [currentProfileId,setCurrentProfileId] = useState("");
 
-  const formAttributes = () => {
-    const listOfAttributes = documentKeys.map((key) => ({
-      attID: key,
-      Selected: false,
-      Label: "",
-    }));
-    console.log(listOfAttributes);
-    return listOfAttributes;
-  };
+  // const formAttributes = () => {
+  //   const listOfAttributes = documentKeys.map((key) => ({
+  //     attID: key,
+  //     Selected: false,
+  //     Label: "",
+  //   }));
+  //   console.log(listOfAttributes);
+  //   return listOfAttributes;
+  // };
 
-useEffect(() => {
-  const initialAttrs = formAttributes();
-  setAttributes([...initialAttrs]);
-  setInitialState([...initialAttrs]);
-}, []);
 
 
   const handleToggle = (id: string) => {
@@ -74,46 +72,126 @@ useEffect(() => {
     );
   };
 
-  const handleProfile = (value:string)=>{
-    if(changeInAttr && !changesSaved){
-      setShowDialog(true);
-    }
-    else{
-      setProfile(value);
-      setAttributes([...initialState]);
-      setChangeInAttr(false);
-      setChangesSaved(false);
-    }
+  //if you try to change the profile 
+const handleProfile = (value: string) => {
+  const data = profileList.find(obj => obj.profileName === value);
+  if (!data) {
+    toast.error("Selected profile not found");
+    return;
   }
 
-  const handleOnSave = ()=>{
-      setChangesSaved(true);
-      alert("Changes saved successfully");
-      console.log("Pofile",profile);
-      console.log("attributes",attributes);
-      console.log("ok");
+  const id = data.profileId;
+
+  if (changeInAttr && !changesSaved) {
+    setShowDialog(true);
+  } else {
+    setProfile(value);
+    setCurrentProfileId(id); // keep this updated
+    handleProfileAttributes(id); // call immediately with correct ID
+    console.log(`fetching atts for ${value}`);
+    // setAttributes([...initialState]);
+    setChangeInAttr(false);
+    setChangesSaved(false);
   }
-useEffect(() => {
+};
+
+
+useEffect(()=>{
   const isChanged = JSON.stringify(attributes) !== JSON.stringify(initialState);
   setChangeInAttr(isChanged);
 }, [attributes, initialState]);
 
+// useEffect(() => {
+//   const initialAttrs = formAttributes();
+//   setAttributes([...initialAttrs]);
+//   setInitialState([...initialAttrs]);
+// }, [])
+
+
+//Api call to get all the profiles
+const handleGetAllProfiles = async()=>{
+  console.log("GetAllProfiles api called")
+  try{
+    const res = await axios.get("http://localhost:4000/profile/AllProfiles");
+    setProfileList(res.data.data);
+    setProfile(res.data.data[0].profileName)
+    handleProfileAttributes(res.data.data[0].profileId)
+    // toast.success(res.data.message); 
+  }
+  catch(error){
+     toast.error(error.response?.data?.message || "Failed to fetch profiles kindly refresh the page");
+  }
+}
+
+//Api call to get all the attributes list related to that profile
+const handleProfileAttributes = async(currentProfileId)=>{
+  console.log("ProfileAttributes api called");
+  try{
+    const res = await axios.get(`http://localhost:4000/attribute/ProfileAttributes/${currentProfileId}`);
+    console.log("my saved data",res.data.data);
+    setAttributes(res.data.data);
+    setInitialState(res.data.data);
+  }
+  catch(error){
+    console.log(error);
+  }
+}
+
+//Api call to get all the attributes list related to that profile
+const handleUpdateProfileAttributes = async()=>{
+    console.log("UpdateProfileAttributes api called");
+    const data = profileList.find((obj)=>{
+      return obj.profileName == profile
+    })
+    console.log("updated attrs",attributes);
+    try{
+    const res = await axios.put(`http://localhost:4000/attribute/updateProfilePermission/${data.profileId}`,{attributes});
+    console.log("My Response from update",res.data.data);
+    setAttributes(res.data.data);
+    setInitialState(res.data.data);
+  }
+  catch(error){
+    console.log(error);
+  }
+}
+
+useEffect(()=>{
+  handleGetAllProfiles();
+},[])
+
+useEffect(() => {
+  const data = profileList.find((obj) => obj.profileName === profile);
+  if (data) {
+    setCurrentProfileId(data.profileId);
+  }
+}, [profile, profileList]); 
+
+const handleOnSave = ()=>{
+  handleUpdateProfileAttributes();
+      setChangesSaved(true);
+      toast.success("Changes saved successfully");
+      console.log("Pofile",profile);
+      console.log("attributes",attributes);
+      console.log("ok");
+  }
 
   return (
     <div className='flex pt-4 flex-col space-y-4 overflow-auto max-h-[85vh] scrollbar-hide'>
       {/* Profile Selection */}
       <div className='flex justify-center space-x-6 text-md'>
         <Label className='text-md'>Select the Profile : </Label>
-        <Select onValueChange={handleProfile} value={profile}>
+        <Select onValueChange={handleProfile} value={profile} >
           <SelectTrigger className="w-[180px] cursor-pointer">
             <SelectValue placeholder="Your Profile" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Profiles</SelectLabel>
-              <SelectItem value="Admin">Admin</SelectItem>
-              <SelectItem value="HR">HR</SelectItem>
-              <SelectItem value="User">User</SelectItem>
+              {
+                profileList.map((profile)=>(
+                  <SelectItem key={profile.profileId} value={profile.profileName}>{profile.profileName}</SelectItem>
+                ))
+              }
             </SelectGroup>
           </SelectContent>
         </Select>
