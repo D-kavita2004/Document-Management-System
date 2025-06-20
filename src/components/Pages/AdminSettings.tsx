@@ -42,18 +42,6 @@ const AdminSettings = () => {
   const [changeInAttr,setChangeInAttr] = useState(false);
   const [currentProfileId,setCurrentProfileId] = useState("");
 
-  // const formAttributes = () => {
-  //   const listOfAttributes = documentKeys.map((key) => ({
-  //     attID: key,
-  //     Selected: false,
-  //     Label: "",
-  //   }));
-  //   console.log(listOfAttributes);
-  //   return listOfAttributes;
-  // };
-
-
-
   const handleToggle = (id: string) => {
     setAttributes((prev) =>
       prev.map((item) =>
@@ -88,7 +76,6 @@ const handleProfile = (value: string) => {
     setProfile(value);
     setCurrentProfileId(id); // keep this updated
     handleProfileAttributes(id); // call immediately with correct ID
-    console.log(`fetching atts for ${value}`);
     // setAttributes([...initialState]);
     setChangeInAttr(false);
     setChangesSaved(false);
@@ -100,12 +87,6 @@ useEffect(()=>{
   const isChanged = JSON.stringify(attributes) !== JSON.stringify(initialState);
   setChangeInAttr(isChanged);
 }, [attributes, initialState]);
-
-// useEffect(() => {
-//   const initialAttrs = formAttributes();
-//   setAttributes([...initialAttrs]);
-//   setInitialState([...initialAttrs]);
-// }, [])
 
 
 //Api call to get all the profiles
@@ -124,11 +105,9 @@ const handleGetAllProfiles = async()=>{
 }
 
 //Api call to get all the attributes list related to that profile
-const handleProfileAttributes = async(currentProfileId)=>{
-  console.log("ProfileAttributes api called");
+const handleProfileAttributes = async(id)=>{
   try{
-    const res = await axios.get(`http://localhost:4000/attribute/ProfileAttributes/${currentProfileId}`);
-    console.log("my saved data",res.data.data);
+    const res = await axios.get(`http://localhost:4000/attribute/ProfileAttributes/${id}`);
     setAttributes(res.data.data);
     setInitialState(res.data.data);
   }
@@ -143,11 +122,11 @@ const handleUpdateProfileAttributes = async()=>{
     const data = profileList.find((obj)=>{
       return obj.profileName == profile
     })
-    console.log("updated attrs",attributes);
     try{
     const res = await axios.put(`http://localhost:4000/attribute/updateProfilePermission/${data.profileId}`,{attributes});
     console.log("My Response from update",res.data.data);
     setAttributes(res.data.data);
+
     setInitialState(res.data.data);
   }
   catch(error){
@@ -160,11 +139,13 @@ useEffect(()=>{
 },[])
 
 useEffect(() => {
-  const data = profileList.find((obj) => obj.profileName === profile);
-  if (data) {
+  if(profile != ""){
+    const data = profileList.find((obj)=>{
+      return obj.profileName === profile
+    })
     setCurrentProfileId(data.profileId);
   }
-}, [profile, profileList]); 
+}, [profile]); 
 
 const handleOnSave = ()=>{
   handleUpdateProfileAttributes();
@@ -211,7 +192,7 @@ const handleOnSave = ()=>{
             {attributes.map((item) => (
               <tr key={item.attID} className="even:bg-gray-200 dark:bg-[#3b3636]">
                 <td className="border border-gray-300 px-1 py-1 text-center align-middle">
-                  <div className="flex items-center justify-center h-full">
+                  <div className="flex items-center justify-center h-full"  onClick={() => handleToggle(item.attID)}>
                     {item.Selected && <Check className="w-6 h-6" />}
                   </div>
                 </td>

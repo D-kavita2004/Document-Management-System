@@ -25,8 +25,8 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
   const handleAddProfile = async (e) => {
     e.preventDefault();
 
-    const profileId = profileIdRef?.current?.value;
-    const profileName = profileNameRef?.current?.value;
+    const profileId = profileIdRef?.current?.value.trim();
+    const profileName = profileNameRef?.current?.value.trim();
 
     try {
       const res = await axios.post("http://localhost:4000/profile/addProfile", {
@@ -49,8 +49,8 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
     const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
-    const profileId = profileIdRef?.current?.value;
-    const profileName = profileNameRef?.current?.value;
+    const profileId = profileIdRef?.current?.value.trim();
+    const profileName = profileNameRef?.current?.value.trim();
 
     try {
       const res = await axios.put(`http://localhost:4000/profile/updateProfile/${profileId}`, {
@@ -91,13 +91,13 @@ const validateFields = () => {
   const profileName = profileNameRef?.current?.value;
 
   // Validate profile name
-  if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/.test(profileName)) {
+  if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/.test(profileName.trim())) {
     setErrorName("Name must start with a letter and contain only letters, numbers, hyphens or underscores.");
     isValid = false;
   }
 
   // Validate profile ID
-  if (!/^\d{1,10}$/.test(profileId)) {
+  if (!/^\d{1,10}$/.test(profileId.trim())) {
     setErrorId("Profile ID must be a string of up to 10 numeric digits");
     isValid = false;
   }
