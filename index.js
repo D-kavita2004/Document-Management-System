@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 import express from "express";
 import profileRoutes from "./src/routes/profile.routes.js"
-import attributeRoutes from "./src/routes/attribute.routes.js";
+import attributeRoutes from "./src/routes/attributePermission.routes.js"
 import connectDB from "./src/config/db.js";
 import cors from "cors";
-import { errorHandler } from "./src/middlewares/profile.middleware.js";
+import { errorHandler } from "./src/middlewares/errorHandling.middleware.js";
 
 dotenv.config();
 

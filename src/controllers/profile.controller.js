@@ -1,9 +1,9 @@
 import {Profile} from "../models/profile.models.js";
+import ProfilePermission from "../models/attributePermission.models.js";
 
 export const addProfile = async (req, res, next) => {
   try {
     const { profileId, profileName } = req.body;
-    const parsedId = Number(profileId);
 
     if(!profileId || !profileName){
       return res.status(400).json({
@@ -11,13 +11,13 @@ export const addProfile = async (req, res, next) => {
         message:"Missing Data"
       })
     } 
-
-    if (!Number.isInteger(parsedId) || parsedId <= 0 || profileId.toString().length > 10) {
+    if (!/^\d{1,10}$/.test(profileId)) {
       return res.status(400).json({
         success: false,
-        message: "Profile ID must be a positive whole number with at most 10 digits"
+        message: "Profile ID must be a string of up to 10 numeric digits"
       });
     }
+
 
     if (!/^[a-zA-Z][a-zA-Z0-9-_]*$/.test(profileName)) {
       return res.status(400).json({
@@ -58,29 +58,32 @@ export const addProfile = async (req, res, next) => {
   }
 };
 
-
 export const deleteProfile = async (req, res, next) => {
   try {
-    const profileId = req.params.profileId;
+    const profileId = req.params.profileId.trim();
 
     const deletedProfile = await Profile.findOneAndDelete({ profileId });
 
-    if (!deletedProfile) {
-      return res.status(404).json({ 
-        success:false,
-        message: "Profile not found" });
+    if (deletedProfile) {
+        const deletedAttributes = await ProfilePermission.findOneAndDelete({ profileId });
+        if(deletedAttributes){
+            return res.status(200).json({
+                  success:true,
+                  message: "Profile deleted successfully",
+                  });
+        }
     }
+    else{
+      return res.status(404).json({ 
+              success:false,
+              message: "Profile not found" });
 
-    res.status(200).json({
-      success:true,
-      message: "Profile deleted successfully",
-    });
+    }
   } 
   catch (error) {
     next(error);
   }
 };
-
 
 export const updateProfile = async (req, res , next) => {
   try {

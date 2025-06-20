@@ -7,7 +7,6 @@ export const errorHandler = (err, req, res, next) => {
 
   if (err.code === 11000) {
     const duplicatedField = Object.keys(err.keyPattern)[0]; // e.g., "profileId"
-
     return res.status(409).json({
       success: false,
       message: `${duplicatedField} already exists`
@@ -22,6 +21,6 @@ export const errorHandler = (err, req, res, next) => {
 
   res.status(statusCode).json({
     success: false,
-    message:err
+    message
   });
 };

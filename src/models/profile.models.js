@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 const profileSchema = new mongoose.Schema({
-      profileId:{
-           type: Number,
-           unique: [true,"Profile Id already exists"],
-           required: [true,"This is a required field"],
-           validate:{
-                  validator:(value)=>{
-                        return Number.isInteger(value) && value.toString().length <= 10
-                  },
-                  message:"Profile ID must be a whole number with at most 10 digits"
-           }
+      
+      profileId: {
+      type: String,
+      required: [true, "This is a required field"],
+      unique: [true, "Profile ID already exists"],
+      validate: {
+      validator: (value) => /^[0-9]{1,10}$/.test(value), // 1 to 10 digits only
+      message: "Profile ID must be a string of up to 10 numeric digits"
+      }
       },
+
       profileName: {
       type: String,
       required: [true, "Profile name is required"],
