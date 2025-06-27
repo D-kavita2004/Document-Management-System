@@ -100,7 +100,7 @@ const handleGetAllProfiles = async()=>{
     // toast.success(res.data.message); 
   }
   catch(error){
-     toast.error(error.response?.data?.message || "Failed to fetch profiles kindly refresh the page");
+     toast.error(error.response?.data?.message || "No Data Found");
   }
 }
 
