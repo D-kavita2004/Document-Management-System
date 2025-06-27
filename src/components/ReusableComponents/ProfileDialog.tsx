@@ -32,7 +32,7 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
       const res = await axios.post("http://localhost:4000/profile/addProfile", {
         profileId,
         profileName,
-      });
+      },{withCredentials:true});
 
       if (res.status === 200 || res.status === 201) {
         onSuccess(); // trigger profile refresh
@@ -55,7 +55,7 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
     try {
       const res = await axios.put(`http://localhost:4000/profile/updateProfile/${profileId}`, {
         profileName,
-      });
+      },{withCredentials:true});
 
       if (res.status === 200 || res.status === 201) {
         onSuccess(); // trigger profile refresh

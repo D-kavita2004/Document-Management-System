@@ -26,20 +26,20 @@ const ProfileSettings = () => {
 
   const handleGetProfiles = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/profile/AllProfiles");
+      const res = await axios.get("http://localhost:4000/profile/AllProfiles",{withCredentials:true});
       console.log(res.data);
 
       if (res.status === 200) {
         setProfiles(res?.data?.data);
       }
     } catch (error) {
-        toast.error("Oops!!! Something went wrong");
+        toast.error(error.response?.data?.message);
     }
   };
 
   const handleDeleteProfile = async () => {
     try {
-      const res = await axios.delete(`http://localhost:4000/profile/deleteProfile/${profileToBeDeleted}`);
+      const res = await axios.delete(`http://localhost:4000/profile/deleteProfile/${profileToBeDeleted}`,{withCredentials:true});
 
       if (res.status === 200 || res.status === 201) {
         handleGetProfiles(); // trigger profile refresh

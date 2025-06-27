@@ -6,11 +6,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
+import { Link } from "react-router-dom"
+import { useRef } from "react";
+import axios from "axios";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+      const navigate = useNavigate();
+      const emailRef = useRef(null);
+      const passwordRef = useRef(null);
+
+      const handleLogin = async (e) =>{
+            e.preventDefault();
+            try{
+                  const res = await axios.post("http://localhost:4000/auth/Login",{
+                        email:emailRef?.current?.value,
+                        password:passwordRef?.current?.value,
+                  },{withCredentials:true})
+                  console.log(res);
+                  localStorage.setItem("loggedIn", "true");
+                  toast.success(res.data.message);
+                  navigate("/")
+            }
+            catch(error){
+            console.log(error);
+            toast.error(error.response?.data?.message || "Could not Login the user");
+            }
+      }
   return (
       <div className="h-[100vh] w-[100vw] flex items-center justify-center ">
             <Card className="w-[350px] border-2 border-black dark:bg-white dark:text-black bg-black text-white">
@@ -18,21 +42,22 @@ const Login = () => {
                   <CardTitle className="text-xl mx-auto">Login Here</CardTitle>
                   </CardHeader>
                   <CardContent>
-                  <form>
+                  <form onSubmit={handleLogin}>
                   <div className="grid w-full items-center gap-4">
                         <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="username">UserName</Label>
-                        <Input id="username" placeholder="Enter your username" />
+                        <Label htmlFor="email" className="text-md">Email : </Label>
+                        <input id="email" placeholder="Enter your email..." required ref={emailRef} className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-gray-700 dark:bg-white dark:text-black"/>
                         </div>
                         <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" placeholder="Enter your password" />
+                        <Label htmlFor="password" className="text-md">Password : </Label>
+                        <input id="password" type="password" placeholder="Enter your password.." required ref={passwordRef}  className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-gray-700 dark:bg-white dark:text-black"/>
                         </div>
+                        <Button className="text-lg mx-auto bg-black text-white hover:bg-white hover:text-black border border-gray-300" type="submit">Login</Button>
                   </div>
                   </form>
                   </CardContent>
-                  <CardFooter className="flex justify-between">
-                  <Button className="text-lg mx-auto">Login</Button>
+                  <CardFooter className="flex justify-between flex-col my-auto">
+                  <p className="text-sm">Have not registered yet ? <Link to="/SignUp" className="text-blue-700">SignUp</Link></p>
                   </CardFooter>
             </Card>
       </div>
