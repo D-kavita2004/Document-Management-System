@@ -31,7 +31,9 @@ app.use("/profile",authMiddleware,profileRoutes);
 app.use("/attribute",authMiddleware,attributeRoutes);
 app.use("/auth",authRoutes);
 
-
+app.get("/verify-token",authMiddleware,(req,res)=>{
+  return res.send(req.user);
+});
 // Connect to DB and only then start server
 connectDB()
   .then(() => {

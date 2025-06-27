@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 const authMiddleware = (req, res, next)=>{
   // console.log(req.cookies.csrftoken);
   const token = req.cookies.token;
-  console.log(token);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized - No token" });
   }
