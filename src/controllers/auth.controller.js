@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import User from "../models/user.models.js";
 import jwt from "jsonwebtoken";
@@ -30,16 +29,16 @@ export const signUp = async (req,res,next) =>{
                         message:"Email is not valid"
                   })                   
             }
-            if(!/^[6-9]\d{9}$/.test(phone)){
+            if(!/^[5-9]\d{9}$/.test(phone)){
                   return res.status(400).json({
                         success:false,
                         message:"Phone number is not valid"
                   })    
             }
-            if(!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(password)){
+            if(!/^(?=.*[A-Za-z])(?=.*\d).{4,}$/.test(password)){
                   return res.status(400).json({
                         success:false,
-                        message:"Password must contain at least one letter and one number"
+                        message: "Password must be at least 4 characters long and include at least one letter and one number and may include any special characters"
                   })                   
             }
             const existingUser = await User.findOne({email});
@@ -60,8 +59,9 @@ export const signUp = async (req,res,next) =>{
             // Set token in secure, HTTP-only cookie
             res.cookie("token", token, {
             httpOnly: true,
-            sameSite: "strict", // protect against CSRF
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            secure: false,         // Use true in production (HTTPS)
+            sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+            path: "/"
             });
 
             const userResponse = saved_user.toObject();
@@ -88,10 +88,10 @@ export const logIn = async (req,res,next)=>{
                         message:"Missing data"
                   })
             }
-            if(!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(password)){
+            if(!/^(?=.*[A-Za-z])(?=.*\d).{4,}$/.test(password)){
                   return res.status(400).json({
                         success:false,
-                        message:"Password must contain at least one letter and one number"
+                        message: "Password must be at least 4 characters long and include at least one letter and one number and may include any special characters"
                   })                   
             }
             if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
@@ -115,12 +115,15 @@ export const logIn = async (req,res,next)=>{
                         message:"Incorrect password"
                   })
             }
-            const token = jwt.sign({id:existingUser._id,email:existingUser.email},process.env.JWT_SECRET,{expiresIn:"1d"})
-            res.cookie("token",token,{
-                  httpOnly:true,
-                  sameSite: "strict",
-                  maxAge:24*60*60*1000
-            })
+            const token = jwt.sign({id:existingUser._id,email:existingUser.email},process.env.JWT_SECRET,{expiresIn:"1d"});
+
+            res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,         // Use true in production (HTTPS)
+            sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+            path: "/"
+            });
+
             return res.status(200).json({
                   success:true,
                   message:"User logged in succesfully"
@@ -130,6 +133,23 @@ export const logIn = async (req,res,next)=>{
             return next(error);
       }
 }
-export const logOut = async (req,res,next)=>{
-      res.send("logOut successful");
-}
+export const logOut = async (req, res, next) => {
+
+  try {
+      const token = req.cookies.token;
+      res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,         // true in production (HTTPS)
+      sameSite: "lax",       // "none" + secure:true for cross-origin
+      path: "/"
+      });
+
+
+    return res.status(200).json({
+      success: true,
+      message: "User logged out successfully"
+    });
+  } catch (error) {
+    return next(error);
+  }
+};

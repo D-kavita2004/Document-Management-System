@@ -7,6 +7,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./src/middlewares/errorHandling.middleware.js";
 import authRoutes from "./src/routes/auth.routes.js";
+import authMiddleware from "./src/middlewares/auth.middleware.js";
 
 dotenv.config();
 
@@ -18,14 +19,16 @@ const port = process.env.PORT || 3000;
 app.use(cors({
   origin: process.env.CORS_ORIGIN, 
   methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(errorHandler);
 
 //Routes
-app.use("/profile",profileRoutes);
-app.use("/attribute",attributeRoutes);
+app.use("/profile",authMiddleware,profileRoutes);
+app.use("/attribute",authMiddleware,attributeRoutes);
 app.use("/auth",authRoutes);
 
 
