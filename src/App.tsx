@@ -8,7 +8,8 @@ import Login from './components/Pages/Login';
 import ProfilePermissions from './components/Pages/ProfilePermissions';
 import ProfileSettings from './components/Pages/ProfileSettings';
 import SignUp from './components/Pages/SignUp';
-import ProtectedRoute from "./components/ReusableComponents/ProtectedRoute"
+import ProtectedRoute from "./components/ReusableComponents/ProtectedRoute";
+import RoleAssignment from './components/Pages/RoleAssignment';
 import { Toaster } from 'sonner';
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
                       <Route path='/Search_Documents' element={<SearchDocuments/>}></Route>
                       <Route path='/Profile_Permissions' element={<ProfilePermissions/>}></Route>
                       <Route path='/Profile_Settings' element={<ProfileSettings/>}></Route>
+                      <Route path='/Role-Assignment' element={<RoleAssignment/>}></Route>
                   </Route>
                 </Route>
             </Routes>

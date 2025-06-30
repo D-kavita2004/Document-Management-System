@@ -10,12 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+
 
 const Navbar = ({ displayNav , setDisplayNav }) => {
 
@@ -95,9 +90,14 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
                                     Profile Settings
                                 </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem className='border-none focus:outline-0'>
-                                <Link className="cursor-pointer text-lg flex justify-center" to={"/Profile_Permissions"} onClick={afterNavigation}>
+                            <DropdownMenuItem className='border-none focus:outline-0 flex justify-center'>
+                                <Link className="cursor-pointer text-lg " to={"/Profile_Permissions"} onClick={afterNavigation}>
                                     Profile Permissions
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className='border-none focus:outline-0 flex justify-center'>
+                                <Link className="cursor-pointer text-lg" to={"/Role-Assignment"} onClick={afterNavigation}>
+                                    Role Assignment
                                 </Link>
                             </DropdownMenuItem>
                         </DropdownMenuContent>

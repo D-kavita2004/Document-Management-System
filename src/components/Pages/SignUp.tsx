@@ -48,7 +48,7 @@ const SignUp = () => {
       <div className="h-[100vh] w-[100vw] flex items-center justify-center ">
             <Card className="w-[350px] border-2 border-black dark:bg-white dark:text-black bg-black text-white max-h-[85%] overflow-auto max-w-[85%]">
                   <CardHeader>
-                  <CardTitle className="text-xl mx-auto">SignUp Here</CardTitle>
+                        <CardTitle className="text-xl mx-auto">SignUp Here</CardTitle>
                   </CardHeader>
                   <CardContent>
                   <form onSubmit={handleSignUp}>

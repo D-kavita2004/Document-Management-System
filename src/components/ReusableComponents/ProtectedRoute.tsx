@@ -21,6 +21,7 @@ const ProtectedRoute = () => {
         setIsValid(true);
       } catch (error) {
         console.error("Token verification failed", error);
+        localStorage.setItem("loggedIn","false");
         setIsValid(false);
       }
     };

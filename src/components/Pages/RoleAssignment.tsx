@@ -1,0 +1,111 @@
+import axios from 'axios';
+import { useEffect,useState } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from '../ui/button';
+
+const RoleAssignment = () => {
+      const [allUsers,setAllUsers] = useState([]);
+      const [updatedUserData,setUpdatedUserData] = useState([]);
+
+      const handleGetAllUsers = async()=>{
+            try{
+                  const res = await axios.get('http://localhost:4000/users/AllUsers',{withCredentials:true});
+                  setAllUsers(res?.data?.data);
+                  console.log(res?.data?.data);
+            }
+            catch(error){
+                  console.log(error);
+            }
+      }
+      const handleChangeInRole = (newRole,userObj,idx) =>{
+
+            if( newRole === allUsers[idx]?.Role){
+                  return;
+            }else{
+                  const user = updatedUserData.find((user)=>user?.email === userObj?.email);
+                  const updatedUser = { ...userObj, Role: newRole };
+                  if(user){ 
+                        const newData = updatedUserData.map((user)=>{
+                             return (user.email === userObj.email) ? updatedUser : user;
+                        })
+                        setUpdatedUserData(newData);
+                  }else{
+                        
+                        setUpdatedUserData((item)=>[...item, updatedUser]);
+                  }
+            }
+      }
+      const saveRoleChanges = async()=>{
+            try{
+                  const res = await axios.put("http://localhost:4000/users/changeRoles",{data:updatedUserData},{withCredentials:true});
+                  console.log(res);
+                  handleGetAllUsers();
+            }
+            catch(error){
+                  console.log(error?.response);
+            }
+      }
+
+      useEffect(()=>{
+            handleGetAllUsers();
+      },[])
+
+  return (
+      <div className='flex flex-col justify-center mx-aut0'>
+            <div className="max-h-[85%] flex justify-evenly overflow-auto md:max-w-[70%] mx-auto max-w-[90%] my-5">
+            <table className="border-collapse text-wrap h-full ">
+            <thead className="bg-[#1A33A9] dark:bg-white dark:text-black text-white sticky top-0 z-10">
+                  <tr>
+                  <th className="px-4 py-2">Name</th>
+                  <th className="px-4 py-2">Email</th>
+                  <th className="px-4 py-2">Role</th>
+                  </tr>
+            </thead>
+            <tbody>
+                  {
+                  allUsers.map((user,index)=>(
+                        <tr key={index} className="even:bg-gray-200 dark:bg-[#3b3636]">
+                              <td className="border border-gray-300 px-4 py-2 text-center align-middle">
+                                    <div className="flex items-center justify-center h-full">
+                                    {user.firstName + " " + user.lastName}
+                                    </div>
+                              </td>
+                              <td className="border border-gray-300 px-1 py-1 whitespace-nowrap text-center cursor-pointer">
+                                    {user.email}
+                              </td>
+                              <td className="border border-gray-300 px-2 py-1 min-w-[150px]">
+                                    <Select defaultValue={user.Role} onValueChange={(newRole) => handleChangeInRole(newRole, user, index)}>
+                                          <SelectTrigger className="w-[180px] cursor-pointer">
+                                                <SelectValue placeholder="Your Profile" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                                <SelectGroup>
+                                                <SelectLabel>Profiles</SelectLabel>
+                                                      <SelectItem value="Admin">Admin</SelectItem>
+                                                      <SelectItem value="User">User</SelectItem>
+                                                      <SelectItem value="Editor">Editor</SelectItem>
+                                                </SelectGroup>
+                                          </SelectContent>
+                                    </Select>
+                              </td>
+                        </tr>                        
+                  ))
+                  }
+
+            </tbody>
+            </table>
+            </div>
+            <Button className='w-fit mx-auto' onClick={saveRoleChanges}>Save Changes</Button>
+      </div>
+  )
+}
+
+export default RoleAssignment;
