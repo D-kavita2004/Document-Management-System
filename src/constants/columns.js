@@ -1,5 +1,3 @@
-
-
 export const attributes = [
   "dID",
   "dDocName",

@@ -2,13 +2,13 @@ import dotenv from "dotenv";
 import express from "express";
 import profileRoutes from "./src/routes/profile.routes.js"
 import attributeRoutes from "./src/routes/attributePermission.routes.js"
+import userRoutes from "./src/routes/user.routes.js"
 import connectDB from "./src/config/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./src/middlewares/errorHandling.middleware.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import authMiddleware from "./src/middlewares/auth.middleware.js";
-
 dotenv.config();
 
 // Create express app
@@ -34,6 +34,8 @@ app.use("/auth",authRoutes);
 app.get("/verify-token",authMiddleware,(req,res)=>{
   return res.send(req.user);
 });
+app.use("/users",authMiddleware,userRoutes);
+
 // Connect to DB and only then start server
 connectDB()
   .then(() => {

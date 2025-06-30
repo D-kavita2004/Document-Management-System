@@ -144,7 +144,6 @@ export const logOut = async (req, res, next) => {
       path: "/"
       });
 
-
     return res.status(200).json({
       success: true,
       message: "User logged out successfully"
