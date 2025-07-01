@@ -1,2 +1,0 @@
-i am working on a document management system in which i have used react for frontend and express and mongodb for backend and i have built login and signup api and i sending the jwt token in cookie 
-but i dont understand how to protect the route means if someone if logged in then they should see dashboard page and if someone is not looged in they should see login page

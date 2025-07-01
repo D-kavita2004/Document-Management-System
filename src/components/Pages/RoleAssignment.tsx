@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from '../ui/button';
+import { toast } from 'sonner';
 
 const RoleAssignment = () => {
       const [allUsers,setAllUsers] = useState([]);
@@ -47,10 +48,13 @@ const RoleAssignment = () => {
             try{
                   const res = await axios.put("http://localhost:4000/users/changeRoles",{data:updatedUserData},{withCredentials:true});
                   console.log(res);
+                  toast.success(res?.data?.message);
+                  updatedUserData.length = 0;
                   handleGetAllUsers();
             }
             catch(error){
                   console.log(error?.response);
+                  toast.error(error.response?.data?.message || "Roles are not assigned");
             }
       }
 
@@ -88,7 +92,7 @@ const RoleAssignment = () => {
                                           </SelectTrigger>
                                           <SelectContent>
                                                 <SelectGroup>
-                                                <SelectLabel>Profiles</SelectLabel>
+                                                <SelectLabel>Roles</SelectLabel>
                                                       <SelectItem value="Admin">Admin</SelectItem>
                                                       <SelectItem value="User">User</SelectItem>
                                                       <SelectItem value="Editor">Editor</SelectItem>
@@ -103,7 +107,7 @@ const RoleAssignment = () => {
             </tbody>
             </table>
             </div>
-            <Button className='w-fit mx-auto' onClick={saveRoleChanges}>Save Changes</Button>
+            <Button className='w-fit mx-auto' onClick={saveRoleChanges} disabled={updatedUserData.length === 0}>Save Changes</Button>
       </div>
   )
 }
