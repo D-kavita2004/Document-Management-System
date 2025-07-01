@@ -1,5 +1,4 @@
 import User from "../models/user.models.js";
-import mongoose from "mongoose";
 
 export const AllUsersData = async(req,res,next)=>{
       try{

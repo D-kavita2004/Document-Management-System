@@ -41,7 +41,6 @@ const userSchema = new mongoose.Schema({
       },
       Role:{
             type:String,
-            required:[true,"This is a required field"],
             default:"User",
             enum:["User","Editor","Admin"],
             trim:true,

@@ -54,7 +54,7 @@ export const signUp = async (req,res,next) =>{
             const new_user = new User({firstName, lastName, email, phone, password:hashedpassword});
             const saved_user = await new_user.save();
 
-            const token = jwt.sign({id:saved_user._id,email:saved_user.email},process.env.JWT_SECRET);
+            const token = jwt.sign({id:saved_user._id,email:saved_user.email,Role:saved_user.Role},process.env.JWT_SECRET);
 
             // Set token in secure, HTTP-only cookie
             res.cookie("token", token, {
@@ -115,7 +115,7 @@ export const logIn = async (req,res,next)=>{
                         message:"Incorrect password"
                   })
             }
-            const token = jwt.sign({id:existingUser._id,email:existingUser.email},process.env.JWT_SECRET);
+            const token = jwt.sign({id:existingUser._id,email:existingUser.email,Role:existingUser.Role},process.env.JWT_SECRET);
 
             res.cookie("token", token, {
             httpOnly: true,
