@@ -38,11 +38,14 @@ const ProfileSettings = () => {
   };
 
   const handleDeleteProfile = async () => {
+    console.log("DELETE HANDLER");
+    console.log(profileToBeDeleted);
     try {
       const res = await axios.delete(`http://localhost:4000/profile/deleteProfile/${profileToBeDeleted}`,{withCredentials:true});
-
-      if (res.status === 200 || res.status === 201) {
+      console.log(res.status);
+      if (res.status === 200) {
         handleGetProfiles(); // trigger profile refresh
+        console.log("i am deleting the profile");
         setopenAlert(false); // close the dialog
         toast.success(res.data.message);
       }

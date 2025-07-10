@@ -7,13 +7,15 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router-dom"
-import { useRef } from "react";
+import { data, Link } from "react-router-dom"
+import { useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "@/Constants/userContext";
 
 const Login = () => {
+      const { user, loading, setUser } = useUser();
       const navigate = useNavigate();
       const emailRef = useRef(null);
       const passwordRef = useRef(null);
@@ -25,9 +27,9 @@ const Login = () => {
                         email:emailRef?.current?.value,
                         password:passwordRef?.current?.value,
                   },{withCredentials:true})
-                  console.log(res);
                   localStorage.setItem("loggedIn", "true");
                   toast.success(res.data.message);
+                  setUser(res.data.data);
                   navigate("/")
             }
             catch(error){
@@ -35,6 +37,11 @@ const Login = () => {
             toast.error(error.response?.data?.message || "Could not Login the user");
             }
       }
+      useEffect(()=>{
+            if(user){
+                  navigate("/");
+            }
+      },[user])
   return (
       <div className="h-[100vh] w-[100vw] flex items-center justify-center ">
             <Card className="w-[350px] border-2 border-black dark:bg-white dark:text-black bg-black text-white">

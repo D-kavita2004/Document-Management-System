@@ -11,7 +11,21 @@ import SignUp from './components/Pages/SignUp';
 import ProtectedRoute from "./components/ReusableComponents/ProtectedRoute";
 import RoleAssignment from './components/Pages/RoleAssignment';
 import { Toaster } from 'sonner';
+import ErrorPage from './components/Pages/ErrorPage';
+
+import { useUser } from './Constants/userContext';
+import { useEffect, useState } from 'react';
+
 function App() {
+  const { user } = useUser();
+  const [userRole,setUserRole] = useState("user");
+
+  useEffect(()=>{
+    if(user){
+      setUserRole(user.role);
+    }
+  })
+
   return (
     <>
       <BrowserRouter>
@@ -23,16 +37,18 @@ function App() {
                   <Route path='/' element={<Layout/>}>
                       <Route index element={<Dashboard/>}></Route>
                       <Route path='/My_Documents' element={<MyDocuments/>}></Route>
-                      <Route path='/Upload_Documents' element={<UploadDocuments/>}></Route>
+                      {(userRole==="Admin" || userRole==="Editor") && <Route path='/Upload_Documents' element={<UploadDocuments/>}></Route>}
                       <Route path='/Search_Documents' element={<SearchDocuments/>}></Route>
-                      <Route path='/Profile_Permissions' element={<ProfilePermissions/>}></Route>
-                      <Route path='/Profile_Settings' element={<ProfileSettings/>}></Route>
-                      <Route path='/Role-Assignment' element={<RoleAssignment/>}></Route>
+                      {userRole==="Admin" && <Route path='/Profile_Permissions' element={<ProfilePermissions/>}></Route>}
+                      {userRole==="Admin" && <Route path='/Profile_Settings' element={<ProfileSettings/>}></Route>}
+                      {userRole==="Admin" && <Route path='/Role-Assignment' element={<RoleAssignment/>}></Route>}
                   </Route>
                 </Route>
+                <Route path='*' element={<ErrorPage/>}></Route>
+
             </Routes>
-            <Toaster position="bottom-right" richColors duration={3000}/>
-      </BrowserRouter>
+            <Toaster position="top-right" richColors duration={3000}/>
+        </BrowserRouter>
     </> 
   )
 }

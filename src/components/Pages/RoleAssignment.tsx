@@ -14,8 +14,19 @@ import { toast } from 'sonner';
 
 const RoleAssignment = () => {
       const [allUsers,setAllUsers] = useState([]);
+      const [allRoles,setallRoles] = useState([]);
       const [updatedUserData,setUpdatedUserData] = useState([]);
 
+      const getAllTheRoles = async()=>{
+            try{
+                  const res = await axios.get("http://localhost:4000/roles/fetchRoles",{withCredentials:true});
+                  setallRoles(res.data.data);
+                  console.log(res.data.data);
+            }
+            catch(error){
+                  console.log(error);
+            }
+      }
       const handleGetAllUsers = async()=>{
             try{
                   const res = await axios.get('http://localhost:4000/users/AllUsers',{withCredentials:true});
@@ -28,19 +39,22 @@ const RoleAssignment = () => {
       }
       const handleChangeInRole = (newRole,userObj,idx) =>{
 
-            if( newRole === allUsers[idx]?.Role){
+            if( newRole === allUsers[idx]?.role?.roleName){
                   return;
             }else{
-                  const user = updatedUserData.find((user)=>user?.email === userObj?.email);
-                  const updatedUser = { ...userObj, Role: newRole };
+                  const user = updatedUserData.find((user)=>user?._id === userObj?._id);
+
+                  const newRoleId = allRoles.find((role)=> role.roleName === newRole);
+                  const newRoleData = {_id:userObj._id, role:newRoleId,};
+
                   if(user){ 
                         const newData = updatedUserData.map((user)=>{
-                             return (user.email === userObj.email) ? updatedUser : user;
+                             return (user._id === userObj._id) ? newRoleData : user;
                         })
                         setUpdatedUserData(newData);
                   }else{
                         
-                        setUpdatedUserData((item)=>[...item, updatedUser]);
+                        setUpdatedUserData((item)=>[...item, newRoleData]);
                   }
             }
       }
@@ -60,6 +74,7 @@ const RoleAssignment = () => {
 
       useEffect(()=>{
             handleGetAllUsers();
+            getAllTheRoles();
       },[])
 
   return (
@@ -86,16 +101,18 @@ const RoleAssignment = () => {
                                     {user.email}
                               </td>
                               <td className="border border-gray-300 px-2 py-1 min-w-[150px]">
-                                    <Select defaultValue={user.Role} onValueChange={(newRole) => handleChangeInRole(newRole, user, index)}>
+                                    <Select defaultValue={user.role.roleName} onValueChange={(newRole) => handleChangeInRole(newRole, user, index)}>
                                           <SelectTrigger className="w-[180px] cursor-pointer">
                                                 <SelectValue placeholder="Your Profile" />
                                           </SelectTrigger>
                                           <SelectContent>
                                                 <SelectGroup>
                                                 <SelectLabel>Roles</SelectLabel>
-                                                      <SelectItem value="Admin">Admin</SelectItem>
-                                                      <SelectItem value="User">User</SelectItem>
-                                                      <SelectItem value="Editor">Editor</SelectItem>
+                                                      {
+                                                            allRoles.length!=0 && allRoles.map((role)=>(
+                                                                 <SelectItem value={role.roleName}>{role.roleName}</SelectItem> 
+                                                            ))
+                                                      }
                                                 </SelectGroup>
                                           </SelectContent>
                                     </Select>

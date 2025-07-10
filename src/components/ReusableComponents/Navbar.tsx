@@ -10,9 +10,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-
+import { useUser } from '@/Constants/userContext';
+import { useEffect, useState } from 'react';
 
 const Navbar = ({ displayNav , setDisplayNav }) => {
+
+    const {user,setUser} = useUser();
+    const [userRole,setUserRole] = useState("User");
 
     const location = useLocation(); 
     const navigate = useNavigate();
@@ -24,21 +28,13 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
         setDisplayNav(false);
     }
 
-    const menuItems = [
-        { path: "/", label: "Dashboard" },
-        { path: "/My_Documents", label: "My Documents" },
-        { path: "/Upload_Documents", label: "Upload Documents" },
-        { path: "/Search_Documents", label: "Search Documents" },
-        // { path: "/Admin_Settings", label: "Admin Settings" },
-        // {path: "/Profile_Settings" , label: "Profile Settings"}
-    ];
-
     const handleLogOut = async()=>{
         try{
             const res = await axios.post("http://localhost:4000/auth/LogOut",{},{withCredentials:true});
             console.log(res);
             toast.success(res.data.message);
             localStorage.removeItem("loggedIn");
+            setUser(null);
             navigate("/Login");
         }
         catch(error){
@@ -46,6 +42,12 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
             console.log(error);
         }
     }
+
+    useEffect(()=>{
+        if(user){
+            setUserRole(user.role);
+        }
+    },[])
     
   return (
     <nav  className={`fixed lg:static top-0 left-0 z-50 h-screen w-[62vmin] md:w-[48vmin] p-3 flex flex-col bg-[#3b3636] shadow-md 
@@ -63,20 +65,45 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
 
         {/* Navigation Menus */}
         <div className="mt-5 p-2 flex-grow">
-                {
-                    menuItems.map((item)=>(
-                        <div
-                        key={item.path}
+
+                <div
                         className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
-                            ${item.path === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}
+                            ${"/" === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}
                         >
-                        <Link className="cursor-pointer" to={item.path} onClick={afterNavigation}>
-                            {item.label}
+                        <Link className="cursor-pointer" to="/" onClick={afterNavigation}>
+                            Dashboard
                         </Link>
-                        </div>
-                    ))
-                    
-                }
+                </div>
+                <div
+                        className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
+                            ${"/My_Documents" === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}
+                        >
+                        <Link className="cursor-pointer" to="/My_Documents" onClick={afterNavigation}>
+                            My Documents
+                        </Link>
+                </div>
+            {   
+                (userRole === "Admin" || userRole === "Editor") && 
+                <div
+                        className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
+                            ${"/Upload_Documents" === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}
+                        >
+                        <Link className="cursor-pointer" to="/Upload_Documents" onClick={afterNavigation}>
+                            Upload Documents
+                        </Link>
+                </div>
+            }
+                <div
+                        className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
+                            ${"/Search_Documents" === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}
+                        >
+                        <Link className="cursor-pointer" to="/Search_Documents" onClick={afterNavigation}>
+                            Search Documents
+                        </Link>
+                </div>                
+
+            {
+                userRole === "Admin" && 
                 <div
                     className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
                      "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}>
@@ -106,6 +133,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
                             {item.label}
                     </Link> */}
                 </div>
+            }
         </div>
 
         {/* Logout Button */}
