@@ -54,7 +54,7 @@ export const addProfile = async (req, res, next) => {
     }
     
   } catch (error) {
-      next(error);
+      return next(error);
   }
 };
 
@@ -65,23 +65,21 @@ export const deleteProfile = async (req, res, next) => {
     const deletedProfile = await Profile.findOneAndDelete({ profileId });
 
     if (deletedProfile) {
-        const deletedAttributes = await ProfilePermission.findOneAndDelete({ profileId });
-        if(deletedAttributes){
-            return res.status(200).json({
-                  success:true,
-                  message: "Profile deleted successfully",
-                  });
-        }
-    }
-    else{
-      return res.status(404).json({ 
-              success:false,
-              message: "Profile not found" });
+      // Try to delete permissions, but don't rely on it for response
+      await ProfilePermission.findOneAndDelete({ profileId });
 
+      return res.status(200).json({
+        success: true,
+        message: "Profile deleted successfully",
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "Profile not found",
+      });
     }
-  } 
-  catch (error) {
-    next(error);
+  } catch (error) {
+    return next(error);
   }
 };
 
@@ -105,27 +103,27 @@ export const updateProfile = async (req, res , next) => {
         message: "Profile not found" });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success:true,
       message: "Profile updated successfully",
       data: updatedProfile,
     });
 
   }  catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
 export const AllProfiles = async (req, res, next) => {
   try {
     const profiles = await Profile.find(); // fetches all documents
-    res.status(200).json({
+    return res.status(200).json({
       success:true,
       message: "All profiles fetched successfully",
       count: profiles.length,
       data: profiles,
     });
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };

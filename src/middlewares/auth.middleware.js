@@ -10,16 +10,16 @@ const authMiddleware = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const id = decoded?.id;
+    const id = decoded?._id;
 
-    const user = await User.findById(id); // ✅ Pass id and await
+    const user = await User.findById(id).populate("role"); 
 
     if (user) {
-      req.user = user; // ✅ Attach full user info
+      req.user = {_id:user._id,email:user.email,role:user.role.roleName}; // ✅ Attach full user info
       return next();
     }
     else {
-      // ✅ Clear token and send proper response
+ 
       res.clearCookie("token", {
         httpOnly: true,
         secure: false,

@@ -2,7 +2,7 @@ import User from "../models/user.models.js";
 
 export const AllUsersData = async(req,res,next)=>{
       try{
-            const allUsers = await User.find({});
+            const allUsers = await User.find({}).populate("role");
             if(allUsers.length === 0){
                   return res.status(200).json({
                         success:true,
@@ -34,10 +34,10 @@ export const changeRoles = async(req,res,next)=>{
             const operations = userList.map((user)=>({
                   updateOne:{
                         filter:{_id: user._id},
-                        update:{$set:{Role:user.Role}}
+                        update:{$set:{role:user.role}}
                   }
             }))
-           console.log(JSON.stringify(operations, null, 2));
+      //      console.log(JSON.stringify(operations, null, 2));
 
             await User.bulkWrite(operations);
             return res.status(200).json({

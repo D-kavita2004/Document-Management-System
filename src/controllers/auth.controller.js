@@ -53,9 +53,15 @@ export const signUp = async (req,res,next) =>{
             
             const new_user = new User({firstName, lastName, email, phone, password:hashedpassword});
             const saved_user = await new_user.save();
-
-            const token = jwt.sign({id:saved_user._id,email:saved_user.email,Role:saved_user.Role},process.env.JWT_SECRET);
-
+            const populated_data = await saved_user.populate("role");
+            const tokenPayload = {
+                  _id: populated_data._id,
+                  email: populated_data.email,
+                  role: populated_data.role.roleName,
+            };
+            console.log(populated_data)
+            const token = jwt.sign(tokenPayload,process.env.JWT_SECRET);
+            console.log(token);
             // Set token in secure, HTTP-only cookie
             res.cookie("token", token, {
             httpOnly: true,
@@ -112,10 +118,16 @@ export const logIn = async (req,res,next)=>{
             if(!isPasswordValid){
                   return res.status(401).json({
                         success:false,
-                        message:"Incorrect password"
+                        message:"Incorrect password",
                   })
             }
-            const token = jwt.sign({id:existingUser._id,email:existingUser.email,Role:existingUser.Role},process.env.JWT_SECRET);
+            const populated_data = await existingUser.populate("role");
+            const tokenPayload = {
+                  _id: populated_data._id,
+                  email: populated_data.email,
+                  role: populated_data.role.roleName,
+            };            
+            const token = jwt.sign(tokenPayload,process.env.JWT_SECRET);
 
             res.cookie("token", token, {
             httpOnly: true,
@@ -126,7 +138,8 @@ export const logIn = async (req,res,next)=>{
 
             return res.status(200).json({
                   success:true,
-                  message:"User logged in succesfully"
+                  message:"User logged in succesfully",
+                  data:{...tokenPayload},
             })
       }
       catch(error){
