@@ -12,11 +12,11 @@ import { useRef } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-
+import { useUser } from "@/Constants/userContext";
 const SignUp = () => {
 
       const navigate = useNavigate();
-      
+      const { user, loading, setUser } = useUser();
       const firstNameRef = useRef(null);
       const lastNameRef = useRef(null);
       const emailRef = useRef(null);
@@ -36,6 +36,7 @@ const SignUp = () => {
                   console.log(res);
                   localStorage.setItem("loggedIn", "true");
                   toast.success(res.data.message);
+                  setUser(res.data.data);
                   navigate("/")
             }
             catch(error){

@@ -13,6 +13,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/Constants/userContext";
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
       const { user, loading, setUser } = useUser();
@@ -37,6 +38,23 @@ const Login = () => {
             toast.error(error.response?.data?.message || "Could not Login the user");
             }
       }
+      const handleGoogleLogin = async (credentialResponse) => {
+            try{
+                  const { credential: idToken } = credentialResponse;
+                  // Send id_token to backend
+                  const res = await axios.post('http://localhost:4000/auth/google-login', {
+                  idToken,
+                  },{withCredentials:true});
+                  localStorage.setItem("loggedIn", "true");
+                  toast.success(res.data.message);
+                  setUser(res.data.data);
+                  navigate("/")
+            }
+            catch(err){
+                  console.log(err);
+            }
+      }
+
       useEffect(()=>{
             if(user){
                   navigate("/");
@@ -65,6 +83,8 @@ const Login = () => {
                   </CardContent>
                   <CardFooter className="flex justify-between flex-col my-auto">
                   <p className="text-sm">Have not registered yet ? <Link to="/SignUp" className="text-blue-700">SignUp</Link></p>
+                  <br></br>
+                  <div className="w-full"><GoogleLogin onSuccess={handleGoogleLogin}/></div>
                   </CardFooter>
             </Card>
       </div>
