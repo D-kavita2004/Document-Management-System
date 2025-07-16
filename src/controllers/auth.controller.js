@@ -1,6 +1,9 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.models.js";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const signUp = async (req,res,next) =>{
       try{  
@@ -165,3 +168,64 @@ export const logOut = async (req, res, next) => {
     return next(error);
   }
 };
+export const handleGoogleLogin = async (req,res,next)=>{
+      const { idToken } = req.body;
+      try {
+      const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload(); // contains user info
+      const {
+      sub: providerId,         // Google's unique user ID
+      email,
+      given_name: firstName,
+      family_name: lastName,
+      } = payload;
+
+      console.log("payload ",JSON.stringify(payload,null,2));
+      let user = await User.findOne({email});
+      if(user){
+            if(user.firstName!==firstName || user.lastName !== lastName || user.providerId!==providerId){
+                  existingUser.firstName = firstName;
+                  existingUser.lastName = lastName;
+                  await user.save();
+            }
+      }
+      else{
+            user = new User({providerId,email,firstName,lastName, authProvider:"google"});
+            await user.save(); 
+      }
+      console.log("user data",JSON.stringify(user,null,2));
+      const populated_data = await user.populate("role");
+      const jwt_token = jwt.sign(
+            {
+                  _id:populated_data._id,
+                  email:populated_data.email,
+                  role:populated_data.role.roleName
+            },process.env.JWT_SECRET);
+      
+      res.cookie("token", jwt_token, {
+            httpOnly: true,
+            secure: false,         // Use true in production (HTTPS)
+            sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+            path: "/"
+            });
+      return res.status(201).json({
+                  success:true,
+                  data:{
+                  _id:populated_data._id,
+                  email:populated_data.email,
+                  role:populated_data.role.roleName,
+                  },
+                  message:"User created successfully"
+            })
+
+      } catch (err) {
+      res.status(400).json({ 
+            message: 'Could not Sign In with Google',
+            success:false 
+      });
+      }
+}

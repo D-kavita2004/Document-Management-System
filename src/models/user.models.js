@@ -28,17 +28,27 @@ const userSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: [true, "Phone number is required"],
     unique: true,
     trim: true,
     match: [/^[6-9]\d{9}$/, "Phone number must be a valid 10-digit Indian mobile number"]
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
     minlength: [8, "Password must be at least 8 characters"],
     trim: true,
     select: false,
+  },
+    // OAuth-specific fields
+  providerId: {  //Unique identifier of a user provided by authentication provider also named as sub in payload
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  authProvider: {   
+    type: String,
+    enum: ['google', 'github', 'facebook', 'local'],
+    default:"local",
+    required: true,
   },
   role: {
     type: mongoose.Schema.Types.ObjectId,
@@ -47,7 +57,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// ✅ Fixed pre-save middleware
+
 userSchema.pre("save", async function (next) {
   try {
     if (!this.role) {
