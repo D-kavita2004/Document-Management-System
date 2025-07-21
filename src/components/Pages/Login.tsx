@@ -21,6 +21,7 @@ const Login = () => {
       const emailRef = useRef(null);
       const passwordRef = useRef(null);
 
+      //Default Login
       const handleLogin = async (e) =>{
             e.preventDefault();
             try{
@@ -54,7 +55,12 @@ const Login = () => {
                   console.log(err);
             }
       }
-
+      const handleSignInWithGithub = ()=>{
+            const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+            const redirectUri = "http://localhost:4000/auth/github/callback";
+            const githubUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=read:user%20user:email`;
+            window.location.href = githubUrl;
+      }
       useEffect(()=>{
             if(user){
                   navigate("/");
@@ -85,6 +91,8 @@ const Login = () => {
                   <p className="text-sm">Have not registered yet ? <Link to="/SignUp" className="text-blue-700">SignUp</Link></p>
                   <br></br>
                   <div className="w-full"><GoogleLogin onSuccess={handleGoogleLogin}/></div>
+                  <br></br>
+                  <div className="w-full" onClick={handleSignInWithGithub}>SignIn with GitHub</div>
                   </CardFooter>
             </Card>
       </div>
