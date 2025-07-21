@@ -4,7 +4,7 @@ import Role from "./roles.models.js";
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, "First name is required"],
+    // required: [true, "First name is required"],
     trim: true,
     minlength: [1, "First name must be at least 1 character long"],
     maxlength: [50, "First name must be at most 50 characters long"],
@@ -12,11 +12,16 @@ const userSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    required: [true, "Last name is required"],
+    // required: [true, "Last name is required"],
     trim: true,
     minlength: [2, "Last name must be at least 2 characters long"],
     maxlength: [50, "Last name must be at most 50 characters long"],
     match: [/^[A-Za-z\s'-]+$/, "Last name contains invalid characters"]
+  },
+  username:{
+    type:String,
+    unique:true,
+    trim:true
   },
   email: {
     type: String,

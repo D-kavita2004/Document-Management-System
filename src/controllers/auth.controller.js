@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.models.js";
 import jwt from "jsonwebtoken";
-import { OAuth2Client } from "google-auth-library";
+import { auth, OAuth2Client } from "google-auth-library";
+import axios from "axios";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -227,5 +228,75 @@ export const handleGoogleLogin = async (req,res,next)=>{
             message: 'Could not Sign In with Google',
             success:false 
       });
+      }
+}
+export const handleGithubLogin = async(req,res,next)=>{
+      const authorisatonCode = req.query.code;
+      if (!authorisatonCode) {
+            return res.status(400).json({ error: "Authorization code missing" });
+            }
+      try{  
+            //Exchanging authoriation code for access token
+            const accessToken = await axios.post("https://github.com/login/oauth/access_token",
+            {
+                  client_id:process.env.GITHUB_CLIENT_ID,
+                  client_secret:process.env.GITHUB_CLIENT_SECRET,
+                  code:authorisatonCode
+            },
+            {
+                  headers:{
+                        Accept: "application/json"
+                  }
+            })
+            
+            //Fetching user info with the access token
+            const userInfoResponse = await axios.get("https://api.github.com/user", {
+            headers: {
+            Authorization: `Bearer ${accessToken.data.access_token}`, 
+            Accept: "application/json"
+            }
+            });
+            const userEmailResponse = await axios.get("https://api.github.com/user/emails",{
+            headers: {
+            Authorization: `Bearer ${accessToken.data.access_token}`,
+            Accept: "application/json"
+            }
+            })
+            const userGithubEmail = userEmailResponse.data[0].email;
+            const {login,id} = userInfoResponse.data
+
+            let user = await User.findOne({email: userGithubEmail});
+            if(user){
+                  if(user.username!==login || user.providerId !== id ){
+                        user.username = login;
+                        user.providerId = id;
+                        await user.save();
+                  }
+            }
+            else{
+                  user = new User({providerId:id,email:userGithubEmail,username:login,authProvider:"github"});
+                  await user.save(); 
+            }
+            console.log("user data",JSON.stringify(user,null,2));
+            const populated_data = await user.populate("role");
+            const jwt_token = jwt.sign(
+                  {
+                        _id:populated_data._id,
+                        email:populated_data.email,
+                        role:populated_data.role.roleName
+                  },process.env.JWT_SECRET);
+            
+            res.cookie("token", jwt_token, {
+                  httpOnly: true,
+                  secure: false,         // Use true in production (HTTPS)
+                  sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+                  path: "/"
+                  });            
+            return res.redirect('http://localhost:5173');
+
+
+      }
+      catch(err){
+            return next(err);
       }
 }

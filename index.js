@@ -36,12 +36,6 @@ app.use("/users",authMiddleware,checkAuthorisation(["Admin"]),userRoutes);
 app.use("/roles",authMiddleware,roleRoutes);
 app.use("/auth",authRoutes);
 
-// app.use("/profile",authMiddleware,profileRoutes);
-// app.use("/attribute",authMiddleware,attributeRoutes);
-// app.use("/users",authMiddleware,userRoutes);
-// app.use("/roles",authMiddleware,roleRoutes);
-// app.use("/auth",authRoutes);
-
 app.get("/verify-token",authMiddleware,(req,res)=>{
   return res.send(req.user);
 });
