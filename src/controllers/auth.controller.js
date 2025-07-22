@@ -277,7 +277,7 @@ export const handleGithubLogin = async(req,res,next)=>{
                   user = new User({providerId:id,email:userGithubEmail,username:login,authProvider:"github"});
                   await user.save(); 
             }
-            console.log("user data",JSON.stringify(user,null,2));
+            // console.log("user data",JSON.stringify(user,null,2));
             const populated_data = await user.populate("role");
             const jwt_token = jwt.sign(
                   {
@@ -291,8 +291,8 @@ export const handleGithubLogin = async(req,res,next)=>{
                   secure: false,         // Use true in production (HTTPS)
                   sameSite: "lax",       // Use "none" for cross-origin + HTTPS
                   path: "/"
-                  });            
-            return res.redirect('http://localhost:5173');
+                  });  
+            return res.redirect("http://localhost:5173/oauth-callback");
 
 
       }
