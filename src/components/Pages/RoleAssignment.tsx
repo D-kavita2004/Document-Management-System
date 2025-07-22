@@ -94,7 +94,9 @@ const RoleAssignment = () => {
                         <tr key={index} className="even:bg-gray-200 dark:bg-[#3b3636]">
                               <td className="border border-gray-300 px-4 py-2 text-center align-middle">
                                     <div className="flex items-center justify-center h-full">
-                                    {user.firstName + " " + user.lastName}
+                                   {user.username ? user.username : (user.firstName + " " + user.lastName)}
+
+                                    {/* {user.firstName + " " + user.lastName} */}
                                     </div>
                               </td>
                               <td className="border border-gray-300 px-1 py-1 whitespace-nowrap text-center cursor-pointer">

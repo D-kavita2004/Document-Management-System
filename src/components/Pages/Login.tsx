@@ -14,7 +14,6 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/Constants/userContext";
 import { GoogleLogin } from '@react-oauth/google';
-
 const Login = () => {
       const { user, loading, setUser } = useUser();
       const navigate = useNavigate();
@@ -90,9 +89,12 @@ const Login = () => {
                   <CardFooter className="flex justify-between flex-col my-auto">
                   <p className="text-sm">Have not registered yet ? <Link to="/SignUp" className="text-blue-700">SignUp</Link></p>
                   <br></br>
-                  <div className="w-full"><GoogleLogin onSuccess={handleGoogleLogin}/></div>
+                  <div className="w-full text-center bg-white text-black"><GoogleLogin onSuccess={handleGoogleLogin}/></div>
                   <br></br>
-                  <div className="w-full" onClick={handleSignInWithGithub}>SignIn with GitHub</div>
+                  <div className="w-full text-center bg-white text-black pt-2 pb-2 flex cursor-pointer" onClick={handleSignInWithGithub}>   
+                        <div className="object-contain w-6 h-6 relative ml-2"><img src="src\assets\github-logo.png" alt="login with github"></img></div>
+                        <div className="mx-auto my-auto">SignIn with GitHub</div>
+                  </div>
                   </CardFooter>
             </Card>
       </div>

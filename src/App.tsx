@@ -12,7 +12,7 @@ import ProtectedRoute from "./components/ReusableComponents/ProtectedRoute";
 import RoleAssignment from './components/Pages/RoleAssignment';
 import { Toaster } from 'sonner';
 import ErrorPage from './components/Pages/ErrorPage';
-
+import OAuthCallback from './components/Pages/OauthCallback';
 import { useUser } from './Constants/userContext';
 import { useEffect, useState } from 'react';
 
@@ -32,7 +32,7 @@ function App() {
             <Routes>
                 <Route path='/Login' element={<Login/>}></Route>
                 <Route path='/SignUp' element={<SignUp/>}></Route>
-
+                <Route path="/oauth-callback" element={<OAuthCallback/>}></Route>
                 <Route element={<ProtectedRoute/>}>
                   <Route path='/' element={<Layout/>}>
                       <Route index element={<Dashboard/>}></Route>
