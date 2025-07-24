@@ -15,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
     const user = await User.findById(id).populate("role"); 
 
     if (user) {
-      req.user = {_id:user._id,email:user.email,role:user.role.roleName}; // ✅ Attach full user info
+      req.user = {_id:user._id,email:user.email,role:user.role.roleName}; 
       return next();
     }
     else {

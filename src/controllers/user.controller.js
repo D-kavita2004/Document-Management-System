@@ -2,7 +2,10 @@ import User from "../models/user.models.js";
 
 export const AllUsersData = async(req,res,next)=>{
       try{
-            const allUsers = await User.find({}).populate("role");
+           const allUsers = await User.find({})
+            .select("username firstName lastName email role")
+            .populate("role")
+            .lean();
             if(allUsers.length === 0){
                   return res.status(200).json({
                         success:true,

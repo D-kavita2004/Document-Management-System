@@ -63,9 +63,9 @@ export const signUp = async (req,res,next) =>{
                   email: populated_data.email,
                   role: populated_data.role.roleName,
             };
-            console.log(populated_data)
+            // console.log(populated_data)
             const token = jwt.sign(tokenPayload,process.env.JWT_SECRET);
-            console.log(token);
+            // console.log(token);
             // Set token in secure, HTTP-only cookie
             res.cookie("token", token, {
             httpOnly: true,
@@ -185,7 +185,7 @@ export const handleGoogleLogin = async (req,res,next)=>{
       family_name: lastName,
       } = payload;
 
-      console.log("payload ",JSON.stringify(payload,null,2));
+      // console.log("payload ",JSON.stringify(payload,null,2));
       let user = await User.findOne({email});
       if(user){
             if(user.firstName!==firstName || user.lastName !== lastName || user.providerId!==providerId){
@@ -198,7 +198,7 @@ export const handleGoogleLogin = async (req,res,next)=>{
             user = new User({providerId,email,firstName,lastName, authProvider:"google"});
             await user.save(); 
       }
-      console.log("user data",JSON.stringify(user,null,2));
+      // console.log("user data",JSON.stringify(user,null,2));
       const populated_data = await user.populate("role");
       const jwt_token = jwt.sign(
             {
@@ -299,4 +299,7 @@ export const handleGithubLogin = async(req,res,next)=>{
       catch(err){
             return next(err);
       }
+}
+export const handleLinkedInLogin = (req,res)=>{
+      res.send("Login with LinkedIn");
 }

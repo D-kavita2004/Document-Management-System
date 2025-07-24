@@ -11,6 +11,7 @@ import authRoutes from "./src/routes/auth.routes.js";
 import authMiddleware from "./src/middlewares/auth.middleware.js";
 import roleRoutes from "./src/routes/roles.route.js";
 import checkAuthorisation from "./src/middlewares/authorisaton.middleware.js";
+import User from "./src/models/user.models.js";
 
 dotenv.config();
 
@@ -39,6 +40,21 @@ app.use("/auth",authRoutes);
 app.get("/verify-token",authMiddleware,(req,res)=>{
   return res.send(req.user);
 });
+
+app.post("/fetchProfileData",authMiddleware,async(req,res,next)=>{
+     try{
+      const {email} = req.body;
+      const userData = await User.findOne({email}).select("firstName lastName email phone role").populate("role").lean();
+      return res.status(200).json({
+            success:true,
+            message:"Profile data fetched successfully",
+            data:userData
+      })
+     }
+     catch(err){
+       return next(err);
+     }
+})
 
 // Connect to DB and only then start server
 connectDB()
