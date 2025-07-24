@@ -15,6 +15,7 @@ import ErrorPage from './components/Pages/ErrorPage';
 import OAuthCallback from './components/Pages/OauthCallback';
 import { useUser } from './Constants/userContext';
 import { useEffect, useState } from 'react';
+import Profile from './components/Pages/Profile';
 
 function App() {
   const { user } = useUser();
@@ -36,6 +37,7 @@ function App() {
                 <Route element={<ProtectedRoute/>}>
                   <Route path='/' element={<Layout/>}>
                       <Route index element={<Dashboard/>}></Route>
+                      <Route path='/profile' element={<Profile/>}></Route>
                       <Route path='/My_Documents' element={<MyDocuments/>}></Route>
                       {(userRole==="Admin" || userRole==="Editor") && <Route path='/Upload_Documents' element={<UploadDocuments/>}></Route>}
                       <Route path='/Search_Documents' element={<SearchDocuments/>}></Route>

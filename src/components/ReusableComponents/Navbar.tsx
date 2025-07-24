@@ -4,14 +4,14 @@ import { Label } from 'recharts';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import { useUser } from '@/Constants/userContext';
 import { useEffect, useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Navbar = ({ displayNav , setDisplayNav }) => {
 
@@ -50,7 +50,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
     },[])
     
   return (
-    <nav  className={`fixed lg:static top-0 left-0 z-50 h-screen w-[62vmin] md:w-[48vmin] p-3 flex flex-col bg-[#3b3636] shadow-md 
+    <nav  className={`fixed lg:static top-0 left-0 z-50 h-screen w-[62vmin] md:w-[48vmin] p-3 overflow-y-auto flex flex-col bg-[#3b3636] shadow-md 
         transition-transform duration-300 ease-in-out 
         ${displayNav ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
 
@@ -104,38 +104,34 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
 
             {
                 userRole === "Admin" && 
-                <div
-                    className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
-                     "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}>
-                    <DropdownMenu >
-                        <DropdownMenuTrigger className='border-none focus:outline-0'>
-                            Admin Settings
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem className='border-none focus:outline-0 flex justify-center' >
-                                <Link className="cursor-pointer text-lg" to={"/Profile_Settings"} onClick={afterNavigation}>
-                                    Profile Settings
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className='border-none focus:outline-0 flex justify-center'>
-                                <Link className="cursor-pointer text-lg " to={"/Profile_Permissions"} onClick={afterNavigation}>
-                                    Profile Permissions
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className='border-none focus:outline-0 flex justify-center'>
-                                <Link className="cursor-pointer text-lg" to={"/Role-Assignment"} onClick={afterNavigation}>
-                                    Role Assignment
-                                </Link>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    {/* <Link className="cursor-pointer" to={item.path} onClick={afterNavigation}>
-                            {item.label}
-                    </Link> */}
+                <div className={`text-center my-5 p-2 flex justify-center items-center text-xl rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9]              hover:dark:bg-white hover:dark:text-black transition ${"/Search_Documents" === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}>            
+                    <Accordion collapsible>
+                        <AccordionItem value="item-1">
+                            <AccordionTrigger className='text-lg font-bold cursor-pointer'> Admin Settings</AccordionTrigger>
+                            <AccordionContent className='text-md font-bold cursor-pointer mt-3' onClick={() => {
+                                navigate("/Profile_Settings");
+                                afterNavigation(); 
+                            }}>
+                                Profile Settings
+                            </AccordionContent>
+                            <AccordionContent className='text-md font-bold cursor-pointer' onClick={() => {
+                                navigate("/Profile_Permissions");
+                                afterNavigation(); 
+                            }}>
+                                Profile Permissions
+                            </AccordionContent>
+                            <AccordionContent className='text-md font-bold cursor-pointer'onClick={() => {
+                                navigate("/Role-Assignment");
+                                afterNavigation(); 
+                            }}>
+                                Role Assignment
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </div>
             }
-        </div>
 
+        </div>
         {/* Logout Button */}
         <div className="mt-auto p-3 text-center relative bottom-2 cursor-pointer">
              <h4 className="text-white text-2xl italic" onClick={handleLogOut}>LogOut</h4>

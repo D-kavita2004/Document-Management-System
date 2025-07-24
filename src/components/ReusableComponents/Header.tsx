@@ -7,7 +7,7 @@ import { Sun }  from "lucide-react";
 import { Moon } from "lucide-react";
 import { useTheme } from "./theme-provider";
 import logo_url from "../../assets/c-logo.jpg";
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = ({displayNav,setDisplayNav}) => {
 
@@ -44,7 +44,7 @@ const Header = ({displayNav,setDisplayNav}) => {
               /></a>
             </div>
           </div>
-        <div className="flex h-full items-center space-x-2 object-contain">
+        <div className="flex h-full items-center space-x-2 object-contain relative right-0">
           <div className="flex items-center relative max-w-md">
             <Input
               className="rounded-xl lg:p-3 lg:pl-10 border-2 border-[#1A33A9] w-[42vmin] h-[8vmin] md:h-[7vmin] object-contain shadow-md shadow-gray-400  dark:bg-white dark:border-black dark:text-black"
@@ -56,17 +56,22 @@ const Header = ({displayNav,setDisplayNav}) => {
             />
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-black " />
           </div>
-          {
-            theme == "light" ? 
-            (
-              <Moon data-testid="theme-toggle" size={29} className="mx-2" onClick={() => setTheme("dark")}/>
-            ):
-            (
-              <Sun data-testid="theme-toggle" size={29} className="mx-2" onClick={() => setTheme("light")}/>
-            )
-          }
-          
+              {
+                theme == "light" ? 
+                (
+                  <Moon data-testid="theme-toggle" size={29} className="mx-2" onClick={() => setTheme("dark")}/>
+                ):
+                (
+                  <Sun data-testid="theme-toggle" size={29} className="mx-2" onClick={() => setTheme("light")}/>
+                )
+              }
+            <Avatar onClick={()=>navigate("/profile")} className="cursor-pointer">
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+            </Avatar>   
         </div>
+
+  
       </div>
     </header>
   );
