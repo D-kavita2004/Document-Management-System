@@ -16,6 +16,8 @@ import OAuthCallback from './components/Pages/OauthCallback';
 import { useUser } from './Constants/userContext';
 import { useEffect, useState } from 'react';
 import Profile from './components/Pages/Profile';
+import ForgetPassword from './components/Pages/forgetPassword';
+import ResetPassword from './components/Pages/ResetPassword';
 
 function App() {
   const { user } = useUser();
@@ -34,6 +36,8 @@ function App() {
                 <Route path='/Login' element={<Login/>}></Route>
                 <Route path='/SignUp' element={<SignUp/>}></Route>
                 <Route path="/oauth-callback" element={<OAuthCallback/>}></Route>
+                <Route path='/forget-password' element={<ForgetPassword/>}></Route>
+                <Route path='/reset-password' element={<ResetPassword/>}></Route>
                 <Route element={<ProtectedRoute/>}>
                   <Route path='/' element={<Layout/>}>
                       <Route index element={<Dashboard/>}></Route>

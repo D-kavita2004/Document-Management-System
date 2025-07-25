@@ -98,7 +98,8 @@ const Login = () => {
                   </form>
                   </CardContent>
                   <CardFooter className="flex justify-between flex-col my-auto">
-                  <p className="text-sm">Have not registered yet ? <Link to="/SignUp" className="text-blue-700">SignUp</Link></p>
+                  <p className="text-sm m-1"><Link to="/forget-password" className="text-blue-500 underline">Forget Password ?</Link></p>
+                  <p className="text-sm">Have not registered yet ? <Link to="/SignUp" className="text-blue-500">SignUp</Link></p>
                   <br></br>
                   <div className="w-full text-center bg-white text-black"><GoogleLogin onSuccess={handleGoogleLogin}/></div>
                   <br></br>
