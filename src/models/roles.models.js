@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { nanoid } from "nanoid";
 
 const roleSchema = new mongoose.Schema({
   roleName:{

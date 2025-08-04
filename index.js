@@ -12,7 +12,7 @@ import authMiddleware from "./src/middlewares/auth.middleware.js";
 import roleRoutes from "./src/routes/roles.route.js";
 import checkAuthorisation from "./src/middlewares/authorisaton.middleware.js";
 import User from "./src/models/user.models.js";
-
+import passwordRoutes from "./src/routes/password.routes.js";
 dotenv.config();
 
 // Create express app
@@ -36,6 +36,7 @@ app.use("/attribute",authMiddleware,checkAuthorisation(["Admin"]),attributeRoute
 app.use("/users",authMiddleware,checkAuthorisation(["Admin"]),userRoutes);
 app.use("/roles",authMiddleware,roleRoutes);
 app.use("/auth",authRoutes);
+app.use("/password",passwordRoutes);
 
 app.get("/verify-token",authMiddleware,(req,res)=>{
   return res.send(req.user);
