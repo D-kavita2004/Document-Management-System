@@ -37,7 +37,7 @@ function App() {
                 <Route path='/SignUp' element={<SignUp/>}></Route>
                 <Route path="/oauth-callback" element={<OAuthCallback/>}></Route>
                 <Route path='/forget-password' element={<ForgetPassword/>}></Route>
-                <Route path='/reset-password' element={<ResetPassword/>}></Route>
+                <Route path='/reset-password/:token' element={<ResetPassword/>}></Route>
                 <Route element={<ProtectedRoute/>}>
                   <Route path='/' element={<Layout/>}>
                       <Route index element={<Dashboard/>}></Route>

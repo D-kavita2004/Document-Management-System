@@ -13,6 +13,8 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/Constants/userContext";
+import { useState } from "react";
+import { Eye,EyeOff } from "lucide-react";
 const SignUp = () => {
 
       const navigate = useNavigate();
@@ -22,6 +24,11 @@ const SignUp = () => {
       const emailRef = useRef(null);
       const phoneRef = useRef(null);
       const passwordRef = useRef(null);
+      const [passwordVisibility,setPasswordVisibility] = useState(false);
+      
+      const togglePasswordVisibility = ()=>{
+            setPasswordVisibility(!passwordVisibility);
+      }
 
       const handleSignUp = async (e)=>{
             e.preventDefault();
@@ -70,10 +77,17 @@ const SignUp = () => {
                         <Label htmlFor="phone" className="text-md">Phone : </Label>
                         <input id="phone" type="tel" ref={phoneRef} placeholder="Enter your phone number" required className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-gray-700 dark:bg-white dark:text-black"/>
                         </div>
+
                         <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="password" className="text-md">Password :</Label>
-                        <input id="password" type="password" ref={passwordRef} placeholder="Enter your password" required className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-gray-700 dark:bg-white dark:text-black"/>
+                              <div className="relative">
+                                    <input id="password" type={passwordVisibility ? "text" : "password"} ref={passwordRef} placeholder="Enter your password" required className="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-gray-700 dark:bg-white dark:text-black"/>
+                                    <div onClick={togglePasswordVisibility}>
+                                          {passwordVisibility ? <Eye className="absolute h-5 w-5 right-3 top-2.5"/>:<EyeOff className="absolute h-5 w-5 right-3 top-2.5"/>}
+                                    </div>
+                              </div>
                         </div>
+
                         <Button className="text-lg mx-auto bg-black text-white hover:bg-white hover:text-black border border-gray-300" type="submit">SignUp</Button>
                   </div>
                   </form>
