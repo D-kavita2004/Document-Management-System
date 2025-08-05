@@ -1,8 +1,10 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.models.js";
+import RefreshTokenModel from "../models/RefreshToken.js";
 import jwt from "jsonwebtoken";
 import { auth, OAuth2Client } from "google-auth-library";
 import axios from "axios";
+import { generateAccessToken,generateRefreshToken } from "../constants/tokens.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -63,15 +65,29 @@ export const signUp = async (req,res,next) =>{
                   email: populated_data.email,
                   role: populated_data.role.roleName,
             };
-            // console.log(populated_data)
-            const token = jwt.sign(tokenPayload,process.env.JWT_SECRET);
-            // console.log(token);
-            // Set token in secure, HTTP-only cookie
-            res.cookie("token", token, {
+            const accessToken = generateAccessToken(tokenPayload);
+            const refreshToken = generateRefreshToken();
+            const refreshTokenDoc = new RefreshTokenModel({ userId: tokenPayload._id, token: refreshToken });
+            const tokenDoc = await refreshTokenDoc.save();
+            if(!tokenDoc){
+                  return res.status(500).json({
+                        success:false,
+                        message:"Refresh token cannot be saved"
+                  })
+            }
+            res.cookie("AccessToken",accessToken, {
             httpOnly: true,
             secure: false,         // Use true in production (HTTPS)
             sameSite: "lax",       // Use "none" for cross-origin + HTTPS
             path: "/"
+            });
+
+            res.cookie("RefreshToken",refreshToken, {
+            httpOnly: true,
+            secure: false,         // Use true in production (HTTPS)
+            sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+            path: "/",
+            maxAge: 15 * 24 * 60 * 60 * 1000
             });
 
             const userResponse = saved_user.toObject();
@@ -131,15 +147,30 @@ export const logIn = async (req,res,next)=>{
                   email: populated_data.email,
                   role: populated_data.role.roleName,
             };            
-            const token = jwt.sign(tokenPayload,process.env.JWT_SECRET);
-
-            res.cookie("token", token, {
+            const accessToken = generateAccessToken(tokenPayload);
+            const refreshToken = generateRefreshToken();
+            const refreshTokenDoc = new RefreshTokenModel({ userId: tokenPayload._id, token: refreshToken });
+            const tokenDoc = await refreshTokenDoc.save();
+            if(!tokenDoc){
+                  return res.status(500).json({
+                        success:false,
+                        message:"Refresh token cannot be saved"
+                  })
+            }
+            res.cookie("AccessToken",accessToken, {
             httpOnly: true,
             secure: false,         // Use true in production (HTTPS)
             sameSite: "lax",       // Use "none" for cross-origin + HTTPS
             path: "/"
             });
 
+            res.cookie("RefreshToken",refreshToken, {
+            httpOnly: true,
+            secure: false,         // Use true in production (HTTPS)
+            sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+            path: "/",
+            maxAge: 15 * 24 * 60 * 60 * 1000
+            });
             return res.status(200).json({
                   success:true,
                   message:"User logged in succesfully",
@@ -153,11 +184,25 @@ export const logIn = async (req,res,next)=>{
 export const logOut = async (req, res, next) => {
 
   try {
-      const token = req.cookies.token;
-      res.clearCookie("token", {
+      const refreshToken = req.cookies.RefreshToken;
+
+      if (!refreshToken) {
+      return res.status(400).json({
+      success: false,
+      message: "No refresh token provided"
+      });
+      }
+      const deleted = await RefreshTokenModel.findOneAndDelete({ token: refreshToken });
+      res.clearCookie("AccessToken", {
       httpOnly: true,
       secure: false,         // true in production (HTTPS)
-      sameSite: "lax",       // "none" + secure:true for cross-origin
+      sameSite: "lax",       
+      path: "/"
+      });
+      res.clearCookie("RefreshToken", {
+      httpOnly: true,
+      secure: false,         // true in production (HTTPS)
+      sameSite: "lax",      
       path: "/"
       });
 
@@ -189,8 +234,9 @@ export const handleGoogleLogin = async (req,res,next)=>{
       let user = await User.findOne({email});
       if(user){
             if(user.firstName!==firstName || user.lastName !== lastName || user.providerId!==providerId){
-                  existingUser.firstName = firstName;
-                  existingUser.lastName = lastName;
+                  user.firstName = firstName;
+                  user.lastName = lastName;
+                  user.providerId = providerId;
                   await user.save();
             }
       }
@@ -200,19 +246,37 @@ export const handleGoogleLogin = async (req,res,next)=>{
       }
       // console.log("user data",JSON.stringify(user,null,2));
       const populated_data = await user.populate("role");
-      const jwt_token = jwt.sign(
-            {
-                  _id:populated_data._id,
-                  email:populated_data.email,
-                  role:populated_data.role.roleName
-            },process.env.JWT_SECRET);
-      
-      res.cookie("token", jwt_token, {
+      const tokenPayload = {
+            _id: populated_data._id,
+            email: populated_data.email,
+            role: populated_data.role.roleName,
+      };
+
+      const accessToken = generateAccessToken(tokenPayload);
+      const refreshToken = generateRefreshToken();
+      const refreshTokenDoc = new RefreshTokenModel({ userId:tokenPayload._id, token: refreshToken });
+      const tokenDoc = await refreshTokenDoc.save();
+      if(!tokenDoc){
+            return res.status(500).json({
+                        success:false,
+                        message:"Refresh token cannot be saved"
+            })
+      }
+      res.cookie("AccessToken",accessToken, {
             httpOnly: true,
             secure: false,         // Use true in production (HTTPS)
             sameSite: "lax",       // Use "none" for cross-origin + HTTPS
             path: "/"
             });
+
+      res.cookie("RefreshToken",refreshToken, {
+            httpOnly: true,
+            secure: false,         // Use true in production (HTTPS)
+            sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+            path: "/",
+            maxAge: 15 * 24 * 60 * 60 * 1000
+            });
+
       return res.status(201).json({
                   success:true,
                   data:{
@@ -237,7 +301,7 @@ export const handleGithubLogin = async(req,res,next)=>{
             }
       try{  
             //Exchanging authoriation code for access token
-            const accessToken = await axios.post("https://github.com/login/oauth/access_token",
+            const token = await axios.post("https://github.com/login/oauth/access_token",
             {
                   client_id:process.env.GITHUB_CLIENT_ID,
                   client_secret:process.env.GITHUB_CLIENT_SECRET,
@@ -252,13 +316,13 @@ export const handleGithubLogin = async(req,res,next)=>{
             //Fetching user info with the access token
             const userInfoResponse = await axios.get("https://api.github.com/user", {
             headers: {
-            Authorization: `Bearer ${accessToken.data.access_token}`, 
+            Authorization: `Bearer ${token.data.access_token}`, 
             Accept: "application/json"
             }
             });
             const userEmailResponse = await axios.get("https://api.github.com/user/emails",{
             headers: {
-            Authorization: `Bearer ${accessToken.data.access_token}`,
+            Authorization: `Bearer ${token.data.access_token}`,
             Accept: "application/json"
             }
             })
@@ -279,19 +343,36 @@ export const handleGithubLogin = async(req,res,next)=>{
             }
             // console.log("user data",JSON.stringify(user,null,2));
             const populated_data = await user.populate("role");
-            const jwt_token = jwt.sign(
-                  {
-                        _id:populated_data._id,
-                        email:populated_data.email,
-                        role:populated_data.role.roleName
-                  },process.env.JWT_SECRET);
-            
-            res.cookie("token", jwt_token, {
+            const tokenPayload = {
+                  _id: populated_data._id,
+                  email: populated_data.email,
+                  role: populated_data.role.roleName,
+            };
+
+            const accessToken = generateAccessToken(tokenPayload);
+            const refreshToken = generateRefreshToken();
+            const refreshTokenDoc = new RefreshTokenModel({ userId:tokenPayload._id, token: refreshToken });
+            const tokenDoc = await refreshTokenDoc.save();
+            if(!tokenDoc){
+                  return res.status(500).json({
+                              success:false,
+                              message:"Refresh token cannot be saved"
+                  })
+            }
+            res.cookie("AccessToken",accessToken, {
                   httpOnly: true,
                   secure: false,         // Use true in production (HTTPS)
                   sameSite: "lax",       // Use "none" for cross-origin + HTTPS
                   path: "/"
-                  });  
+                  });
+
+            res.cookie("RefreshToken",refreshToken, {
+                  httpOnly: true,
+                  secure: false,         // Use true in production (HTTPS)
+                  sameSite: "lax",       // Use "none" for cross-origin + HTTPS
+                  path: "/",
+                  maxAge: 15 * 24 * 60 * 60 * 1000
+                  });
             return res.redirect("http://localhost:5173/oauth-callback");
 
 

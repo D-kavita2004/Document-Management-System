@@ -1,36 +1,70 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.models.js"; // Add `.js` if using ES modules
+import User from "../models/user.models.js"; 
+import RefreshTokenModel from "../models/RefreshToken.js";
+import { generateAccessToken } from "../constants/tokens.js";
 
-const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+const authMiddleware =async (req, res, next) => {
 
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized - No token. Please refresh the page." });
-  }
+  const { AccessToken, RefreshToken } = req.cookies;
+  if (!AccessToken && !RefreshToken) return res.sendStatus(401);
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const id = decoded?._id;
+    // 1. Try access token
+    const decoded = jwt.verify(AccessToken, process.env.ACCESS_TOKEN_SECRET);
+    req.user = decoded;
+    return next();
 
-    const user = await User.findById(id).populate("role"); 
-
-    if (user) {
-      req.user = {_id:user._id,email:user.email,role:user.role.roleName}; 
-      return next();
-    }
-    else {
- 
-      res.clearCookie("token", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-        path: "/"
-      });
-      return res.status(401).json({ message: "Unauthorized - User does not exist anymore." });
-    }
   } catch (err) {
-    return res.status(403).json({ message: "Forbidden - Invalid or expired token" });
+    if (RefreshToken) {
+      try 
+      {
+        const refreshTokenDoc = await RefreshTokenModel.findOne({token:RefreshToken});
+        if(refreshTokenDoc){
+            const userData = await User.findOne({_id:refreshTokenDoc.userId});
+            const populated_data = await userData.populate("role");
+            const tokenPayload = {
+                    _id: populated_data._id,
+                    email: populated_data.email,
+                    role: populated_data.role.roleName,
+            };
+            const newAccessToken = generateAccessToken(tokenPayload);
+            res.cookie("AccessToken",newAccessToken, {
+              httpOnly: true,
+              secure: false,         
+              sameSite: "lax",       
+              path: "/",
+              });
+            
+          req.user = {
+            id: populated_data._id,
+            email: populated_data.email,
+            role: populated_data.role.roleName
+          };
+  ;
+          return next();
+          }
+        else{
+          return res.status(401).json({
+              success:false,
+              message:"Refresh token expired"
+          })
+        }
+      } 
+      catch (refreshErr) 
+      {
+
+        return res.status(403).json({
+              success:false,
+              message:"Refresh token invalid"
+        }); 
+      }
+    }
+
+    return res.status(401).json({
+            success:false,
+            message:"Token invalid for other reason"
+    }); 
   }
-};
+}
 
 export default authMiddleware;

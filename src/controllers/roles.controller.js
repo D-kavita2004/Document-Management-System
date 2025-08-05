@@ -1,4 +1,5 @@
-import Role from "../models/roles.models.js"
+import Role from "../models/roles.models.js";
+
 export const allRoles = async(req,res,next) =>{
       try{
             const roles = await Role.find({});

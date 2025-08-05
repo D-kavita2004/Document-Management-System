@@ -36,7 +36,7 @@ export const forgetPassword = async(req,res,next)=>{
                         subject:"Reset password link",
                         html:`<h1>RESET PASSWORD LINK</h1>
                         <p>Please click on the below link to reset your password</p>
-                        <p><a href="http://localhost:5173/reset-password/${token}">http://localhost:4000/password/reset-password/${token}</a></p>
+                        <p><a href="${process.env.CLIENT_URL}/reset-password/${token}">http://localhost:4000/password/reset-password/${token}</a></p>
                         <p>The link will expire in 10 minutes.</p>
                         <p>If you didn't request a password reset, please ignore this email.</p>`
                         
@@ -64,8 +64,6 @@ export const forgetPassword = async(req,res,next)=>{
 export const resetPassword = async(req,res,next)=>{
       try{
             const {jwtToken,updatedPassword} = req.body;
-            console.log("Token",jwtToken);
-            console.log("password",updatedPassword);
             let id;
 
             const decodedData = jwt.verify(jwtToken,process.env.RESET_PASSWORD_TOKEN);

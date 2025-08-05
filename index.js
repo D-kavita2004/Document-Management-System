@@ -13,6 +13,7 @@ import roleRoutes from "./src/routes/roles.route.js";
 import checkAuthorisation from "./src/middlewares/authorisaton.middleware.js";
 import User from "./src/models/user.models.js";
 import passwordRoutes from "./src/routes/password.routes.js";
+
 dotenv.config();
 
 // Create express app
@@ -21,7 +22,7 @@ const port = process.env.PORT || 3000;
 
 // Middlewares
 app.use(cors({
-  origin: process.env.CORS_ORIGIN, 
+  origin: process.env.CLIENT_URL, 
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
