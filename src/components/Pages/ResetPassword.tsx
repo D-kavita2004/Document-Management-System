@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye,EyeOff } from "lucide-react";
 
 const ResetPassword = () => {
-
+      const BASE_URL = import.meta.env.VITE_API_BASE_URL;
       const navigate = useNavigate();
 
       const [newPassErr,setNewPassErr] = useState("");
@@ -61,7 +61,7 @@ const ResetPassword = () => {
 
             if (hasError) return;
 
-            const res = await axios.post("http://localhost:4000/password/reset-password", {
+            const res = await axios.post(`${BASE_URL}/password/reset-password`, {
                   jwtToken: token,
                   updatedPassword: newPassword,
             });

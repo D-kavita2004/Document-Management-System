@@ -18,6 +18,7 @@ import {Eye,EyeOff} from "lucide-react";
 
 
 const Login = () => {
+      const BASE_URL = import.meta.env.VITE_API_BASE_URL;
       const { user, loading, setUser } = useUser();
       const navigate = useNavigate();
       const emailRef = useRef(null);
@@ -32,7 +33,7 @@ const Login = () => {
       const handleLogin = async (e) =>{
             e.preventDefault();
             try{
-                  const res = await axios.post("http://localhost:4000/auth/Login",{
+                  const res = await axios.post(`${BASE_URL}/auth/Login`,{
                         email:emailRef?.current?.value,
                         password:passwordRef?.current?.value,
                   },{withCredentials:true})
@@ -50,7 +51,7 @@ const Login = () => {
             try{
                   const { credential: idToken } = credentialResponse;
                   // Send id_token to backend
-                  const res = await axios.post('http://localhost:4000/auth/google-login', {
+                  const res = await axios.post(`${BASE_URL}/auth/google-login`, {
                   idToken,
                   },{withCredentials:true});
                   localStorage.setItem("loggedIn", "true");
@@ -64,13 +65,13 @@ const Login = () => {
       }
       const handleSignInWithGithub = ()=>{
             const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
-            const redirectUri = "http://localhost:4000/auth/github/callback";
+            const redirectUri = `${BASE_URL}/auth/github/callback`;
             const githubUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=read:user%20user:email`;
             window.location.href = githubUrl;
       }
       const handleSignInWithLinkedIn = () => {
             const clientId = import.meta.env.VITE_LINKEDIN_CLIENT_ID;
-            const redirectUri = encodeURIComponent("http://localhost:4000/auth/linkedin/callback");
+            const redirectUri = encodeURIComponent(`${BASE_URL}/auth/linkedin/callback`);
             const scope = encodeURIComponent("r_liteprofile r_emailaddress");
 
             const linkedInUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=foobar&scope=${scope}`;

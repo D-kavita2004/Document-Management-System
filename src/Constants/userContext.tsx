@@ -5,6 +5,7 @@ import axios from 'axios';
 const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [user, setUser] = useState(null);       
   const [loading, setLoading] = useState(true);  
 
@@ -18,7 +19,7 @@ export const UserProvider = ({ children }) => {
           return;
         }
 
-        const res = await axios.get("http://localhost:4000/verify-token", {
+        const res = await axios.get(`${BASE_URL}/verify-token`, {
           withCredentials: true,
         });
 

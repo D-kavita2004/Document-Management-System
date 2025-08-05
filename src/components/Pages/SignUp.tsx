@@ -15,8 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "@/Constants/userContext";
 import { useState } from "react";
 import { Eye,EyeOff } from "lucide-react";
-const SignUp = () => {
 
+const SignUp = () => {
+      const BASE_URL = import.meta.env.VITE_API_BASE_URL;
       const navigate = useNavigate();
       const { user, loading, setUser } = useUser();
       const firstNameRef = useRef(null);
@@ -33,7 +34,7 @@ const SignUp = () => {
       const handleSignUp = async (e)=>{
             e.preventDefault();
             try{
-                  const res = await axios.post("http://localhost:4000/auth/SignUp",{
+                  const res = await axios.post(`${BASE_URL}/auth/SignUp`,{
                         firstName:firstNameRef?.current?.value,
                         lastName:lastNameRef?.current?.value,
                         email:emailRef?.current?.value,

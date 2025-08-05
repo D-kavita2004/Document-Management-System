@@ -6,13 +6,14 @@ import { useUser } from "@/Constants/userContext";
 import { toast } from "sonner";
 
 const OAuthCallback = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const navigate = useNavigate();
   const {setUser} = useUser();
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/verify-token", {
+        const res = await axios.get(`${BASE_URL}/verify-token`, {
           withCredentials: true,
         });
         console.log("OAUTH_CALLBACK",res.data.data);

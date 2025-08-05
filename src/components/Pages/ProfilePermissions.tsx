@@ -28,6 +28,7 @@ import axios from "axios";
 
 const ProfilePermissions = () => {
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   type Attribute = {
   attID: string;
   Selected: boolean;
@@ -93,7 +94,7 @@ useEffect(()=>{
 const handleGetAllProfiles = async()=>{
   console.log("GetAllProfiles api called")
   try{
-    const res = await axios.get("http://localhost:4000/profile/AllProfiles",{withCredentials:true});
+    const res = await axios.get(`${BASE_URL}/profile/AllProfiles`,{withCredentials:true});
     setProfileList(res.data.data);
     setProfile(res.data.data[0].profileName)
     handleProfileAttributes(res.data.data[0].profileId)
@@ -107,7 +108,7 @@ const handleGetAllProfiles = async()=>{
 //Api call to get all the attributes list related to that profile
 const handleProfileAttributes = async(id)=>{
   try{
-    const res = await axios.get(`http://localhost:4000/attribute/ProfileAttributes/${id}`,{withCredentials:true});
+    const res = await axios.get(`${BASE_URL}/attribute/ProfileAttributes/${id}`,{withCredentials:true});
     setAttributes(res.data.data);
     setInitialState(res.data.data);
   }
@@ -123,7 +124,7 @@ const handleUpdateProfileAttributes = async()=>{
       return obj.profileName == profile
     })
     try{
-    const res = await axios.put(`http://localhost:4000/attribute/updateProfilePermission/${data.profileId}`,{attributes},{withCredentials:true});
+    const res = await axios.put(`${BASE_URL}/attribute/updateProfilePermission/${data.profileId}`,{attributes},{withCredentials:true});
     console.log("My Response from update",res.data.data);
     setAttributes(res.data.data);
 

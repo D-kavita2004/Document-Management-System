@@ -16,6 +16,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profileData }) => {
+
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const profileIdRef = useRef<HTMLInputElement>(null);
   const profileNameRef = useRef<HTMLInputElement>(null);
   const [errorId,setErrorId] = useState("");
@@ -29,7 +31,7 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
     const profileName = profileNameRef?.current?.value.trim();
 
     try {
-      const res = await axios.post("http://localhost:4000/profile/addProfile", {
+      const res = await axios.post(`${BASE_URL}/profile/addProfile`, {
         profileId,
         profileName,
       },{withCredentials:true});
@@ -53,7 +55,7 @@ const ProfileDialog = ({ title, desc, open, setOpen, onSuccess, purpose, profile
     const profileName = profileNameRef?.current?.value.trim();
 
     try {
-      const res = await axios.put(`http://localhost:4000/profile/updateProfile/${profileId}`, {
+      const res = await axios.put(`${BASE_URL}/profile/updateProfile/${profileId}`, {
         profileName,
       },{withCredentials:true});
 

@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 
 const ProfileSettings = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [profiles, setProfiles] = useState([]);
   const [open, setOpen] = useState(false); //profile dialog
   const [selectedProfile, setSelectedProfile] = useState(null);
@@ -26,7 +27,7 @@ const ProfileSettings = () => {
 
   const handleGetProfiles = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/profile/AllProfiles",{withCredentials:true});
+      const res = await axios.get(`${BASE_URL}/profile/AllProfiles`,{withCredentials:true});
       console.log(res.data);
 
       if (res.status === 200) {
@@ -41,7 +42,7 @@ const ProfileSettings = () => {
     console.log("DELETE HANDLER");
     console.log(profileToBeDeleted);
     try {
-      const res = await axios.delete(`http://localhost:4000/profile/deleteProfile/${profileToBeDeleted}`,{withCredentials:true});
+      const res = await axios.delete(`${BASE_URL}/profile/deleteProfile/${profileToBeDeleted}`,{withCredentials:true});
       console.log(res.status);
       if (res.status === 200) {
         handleGetProfiles(); // trigger profile refresh

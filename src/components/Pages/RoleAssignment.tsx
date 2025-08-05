@@ -13,13 +13,14 @@ import { Button } from '../ui/button';
 import { toast } from 'sonner';
 
 const RoleAssignment = () => {
+      const BASE_URL = import.meta.env.VITE_API_BASE_URL;
       const [allUsers,setAllUsers] = useState([]);
       const [allRoles,setallRoles] = useState([]);
       const [updatedUserData,setUpdatedUserData] = useState([]);
 
       const getAllTheRoles = async()=>{
             try{
-                  const res = await axios.get("http://localhost:4000/roles/fetchRoles",{withCredentials:true});
+                  const res = await axios.get(`${BASE_URL}/roles/fetchRoles`,{withCredentials:true});
                   setallRoles(res.data.data);
                   console.log(res.data.data);
             }
@@ -29,7 +30,7 @@ const RoleAssignment = () => {
       }
       const handleGetAllUsers = async()=>{
             try{
-                  const res = await axios.get('http://localhost:4000/users/AllUsers',{withCredentials:true});
+                  const res = await axios.get(`${BASE_URL}/users/AllUsers`,{withCredentials:true});
                   setAllUsers(res?.data?.data);
                   console.log(res?.data?.data);
             }
@@ -60,7 +61,7 @@ const RoleAssignment = () => {
       }
       const saveRoleChanges = async()=>{
             try{
-                  const res = await axios.put("http://localhost:4000/users/changeRoles",{data:updatedUserData},{withCredentials:true});
+                  const res = await axios.put(`${BASE_URL}/users/changeRoles`,{data:updatedUserData},{withCredentials:true});
                   console.log(res);
                   toast.success(res?.data?.message);
                   updatedUserData.length = 0;

@@ -15,6 +15,7 @@ import { useState } from "react"
 
 const ForgetPassword = () => {
 
+      const BASE_URL = import.meta.env.VITE_API_BASE_URL;
       const emailRef = useRef("");
       const [loading,setLoading] = useState(false);
 
@@ -22,7 +23,7 @@ const ForgetPassword = () => {
             e.preventDefault();
             setLoading(true);
             try{
-                  const res = await axios.post("http://localhost:4000/password/forget-password",{
+                  const res = await axios.post(`${BASE_URL}/password/forget-password`,{
                        email:emailRef.current.value,
                   });
                   setLoading(false);

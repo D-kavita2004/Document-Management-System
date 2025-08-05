@@ -3,13 +3,14 @@ import axios from 'axios';
 import { useUser } from '@/Constants/userContext';
 
 const Profile = () => {
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const { user } = useUser();
   const [profileData, setProfileData] = useState(null);
 
   const BringProfileData = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:4000/fetchProfileData",
+        `${BASE_URL}/fetchProfileData`,
         { email: user.email },
         { withCredentials: true }
       );
