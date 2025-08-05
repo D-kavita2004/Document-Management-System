@@ -66,7 +66,7 @@ const SearchDocuments = () => {
   const handleSearchCall = async() => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/api/search`, {
+      const response = await axios.get(`:8080/api/search`, {
         params: { searchText: debouncedValue },
       });
   

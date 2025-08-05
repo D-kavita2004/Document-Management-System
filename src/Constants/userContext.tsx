@@ -1,7 +1,8 @@
+// src/Constants/userContext.tsx
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 
-const UserContext = createContext();
+const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);       
@@ -13,7 +14,8 @@ export const UserProvider = ({ children }) => {
         const isLoggedIn = localStorage.getItem("loggedIn") === "true";
         if (!isLoggedIn) {
           setUser(null);
-          return setLoading(false);
+          setLoading(false);
+          return;
         }
 
         const res = await axios.get("http://localhost:4000/verify-token", {
@@ -40,4 +42,11 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-export const useUser = () => useContext(UserContext);
+// ✅ This must be a valid React Hook
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === null) {
+    throw new Error("useUser must be used within a UserProvider");
+  }
+  return context;
+};

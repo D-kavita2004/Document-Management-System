@@ -30,7 +30,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
 
     const handleLogOut = async()=>{
         try{
-            const res = await axios.post("http://localhost:4000/auth/LogOut",{},{withCredentials:true});
+            const res = await axios.post(":4000/auth/LogOut",{},{withCredentials:true});
             console.log(res);
             toast.success(res.data.message);
             localStorage.removeItem("loggedIn");
