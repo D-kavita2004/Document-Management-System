@@ -1,0 +1,4 @@
+/profile - canDeleteProfile,canAddProfile,canUpdateProfile,canGetAllProfiles
+/roles - canGetAllRoles,canAddNewRole,
+/profileAttributes - canGetProfileAttributes,canUpdateProfilePermission
+/user - canGetAllUsers,canChangeRoles
