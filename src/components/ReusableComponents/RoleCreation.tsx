@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRef } from "react";
+import { Textarea } from "@/components/ui/textarea"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,9 +22,10 @@ const RoleCreation = () => {
   const Base_url = import.meta.env.VITE_API_BASE_URL;
   const [open, setOpen] = useState(false);
   const roleNameRef = useRef(null);
+  const roleDescRef = useRef(null);
   const [existingRoles,setExistingRoles] = useState([]);
 
-  const [inputError,setInputError] = useState("");
+  const [roleNameErr,setRoleNameErr] = useState("");
   
   const fetchExistingRoles = async()=>{
     try{
@@ -38,13 +40,17 @@ const RoleCreation = () => {
 
   const insertNewrole = async (e) => {
     e.preventDefault(); 
-    setInputError("");
-    const roleName = roleNameRef.current?.value?.trim();
+    setRoleNameErr("");
+    const roleName = roleNameRef?.current?.value.trim();
+    const roleDesc = roleDescRef?.current?.value.trim();
 
-    if((!/^[a-zA-Z][a-zA-Z0-9_-]{0,12}$/.test(roleName))){
-      setInputError("Only letters, numbers, '-', '_' allowed. Start with a letter. Max 13 chars.");
+    if (!/^[a-zA-Z][a-zA-Z0-9_-]{2,14}$/.test(roleName)) {
+     setRoleNameErr(
+        "Role name must be 3–15 characters, start with a letter, and contain only letters, numbers, hyphens (-), or underscores (_)."
+      );
       return;
     }
+
     try{
       const res = await axios.post(`${Base_url}/roles/addRole`,{roleName:roleName},{withCredentials:true});
       console.log(res?.data?.data);
@@ -54,7 +60,9 @@ const RoleCreation = () => {
       setOpen(false);
     }
     catch(err){
-       toast.error(err?.response?.data?.message || "Role is not added");
+      //  toast.error(err?.response?.data?.message || "Role is not added");
+      console.log(err);
+      // toast.error(err);
     }
   };
 
@@ -78,7 +86,7 @@ const RoleCreation = () => {
             <AlertDialog open={open} onOpenChange={(val) => {
                   setOpen(val);
                   if (val === true) {
-                    setInputError(""); // Clear error when opening
+                    setRoleNameErr(""); // Clear error when opening
                   }
               }}>
                 <AlertDialogTrigger asChild>
@@ -97,11 +105,15 @@ const RoleCreation = () => {
                       You can create a custom role here
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                    <div className="grid mt-4 mb-5">
+                    <div className="grid mt-4 mb-5 gap-5">
                       <div className="grid gap-2">
                         <Label htmlFor="newrole">Role Name : </Label>
                         <input id="newrole" placeholder="Enter role name..." required ref={roleNameRef} className="w-full px-3 py-1.5 border border-gray-300 rounded shadow-sm focus:border-gray-700 dark:bg-white dark:text-black"/>
-                        {inputError && <p className="text-red-700 text-sm">{inputError}</p>}
+                        {roleNameErr && <p className="text-red-700 text-sm">{roleNameErr}</p>}
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="desc">Description : </Label>
+                        <Textarea id="desc" placeholder="Write the role description here" ref={roleDescRef} required/>
                       </div>
                     </div>
                   <AlertDialogFooter>
