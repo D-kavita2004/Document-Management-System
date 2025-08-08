@@ -16,8 +16,12 @@ import OAuthCallback from './components/Pages/OauthCallback';
 import { useUser } from './Constants/userContext';
 import { useEffect, useState } from 'react';
 import Profile from './components/Pages/Profile';
-import ForgetPassword from './components/Pages/forgetPassword';
+import ForgetPassword from './components/Pages/ForgetPassword';
 import ResetPassword from './components/Pages/ResetPassword';
+import SettingsPage from './components/Pages/SettingsPage';
+import SettingOptions from './components/ReusableComponents/SettingOptions';
+import RoleCreation from './components/ReusableComponents/RoleCreation';
+import RolePermission from './components/ReusableComponents/RolePermission';
 
 function App() {
   const { user } = useUser();
@@ -43,11 +47,19 @@ function App() {
                       <Route index element={<Dashboard/>}></Route>
                       <Route path='/profile' element={<Profile/>}></Route>
                       <Route path='/My_Documents' element={<MyDocuments/>}></Route>
-                      {(userRole==="Admin" || userRole==="Editor") && <Route path='/Upload_Documents' element={<UploadDocuments/>}></Route>}
+                      {(userRole==="admin" || userRole==="editor") && <Route path='/Upload_Documents' element={<UploadDocuments/>}></Route>}
                       <Route path='/Search_Documents' element={<SearchDocuments/>}></Route>
-                      {userRole==="Admin" && <Route path='/Profile_Permissions' element={<ProfilePermissions/>}></Route>}
-                      {userRole==="Admin" && <Route path='/Profile_Settings' element={<ProfileSettings/>}></Route>}
-                      {userRole==="Admin" && <Route path='/Role-Assignment' element={<RoleAssignment/>}></Route>}
+                      {userRole==="admin" && <Route path='/Profile_Permissions' element={<ProfilePermissions/>}></Route>}
+                      {userRole==="admin" && <Route path='/Profile_Settings' element={<ProfileSettings/>}></Route>}
+                      {userRole==="admin" && <Route path='/Role-Assignment' element={<RoleAssignment/>}></Route>}
+                      {userRole==="admin" && 
+                        <Route path='/Settings' element={<SettingsPage/>}>
+                          <Route path='' element={<SettingOptions/>}></Route>
+                          <Route path='Roles' element={<RoleCreation/>}></Route>
+                          <Route path='Role-Permissions' element={<RolePermission/>}></Route>
+                          <Route path='Assign-Role' element={<RoleAssignment/>}></Route>
+                        </Route>
+                      }                      
                   </Route>
                 </Route>
                 <Route path='*' element={<ErrorPage/>}></Route>

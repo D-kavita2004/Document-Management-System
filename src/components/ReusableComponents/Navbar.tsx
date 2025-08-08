@@ -15,6 +15,7 @@ import {
 
 const Navbar = ({ displayNav , setDisplayNav }) => {
 
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const {user,setUser} = useUser();
     const [userRole,setUserRole] = useState("User");
 
@@ -30,7 +31,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
 
     const handleLogOut = async()=>{
         try{
-            const res = await axios.post(":4000/auth/LogOut",{},{withCredentials:true});
+            const res = await axios.post(`${BASE_URL}/auth/LogOut`,{},{withCredentials:true});
             console.log(res);
             toast.success(res.data.message);
             localStorage.removeItem("loggedIn");
@@ -83,7 +84,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
                         </Link>
                 </div>
             {   
-                (userRole === "Admin" || userRole === "Editor") && 
+                (userRole === "admin" || userRole === "editor") && 
                 <div
                         className={`text-center my-5 text-xl p-2 rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9] hover:dark:bg-white hover:dark:text-black transition
                             ${"/Upload_Documents" === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}
@@ -103,7 +104,7 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
                 </div>                
 
             {
-                userRole === "Admin" && 
+                userRole === "admin" && 
                 <div className={`text-center my-5 p-2 flex justify-center items-center text-xl rounded-3xl shadow-md shadow-gray-400 hover:font-bold hover:bg-[#1A33A9]              hover:dark:bg-white hover:dark:text-black transition ${"/Search_Documents" === location.pathname ? "bg-[#1A33A9] dark:bg-white dark:text-black text-white dark:font-bold" : "text-white"}`}>            
                     <Accordion collapsible>
                         <AccordionItem value="item-1">

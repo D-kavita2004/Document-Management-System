@@ -101,10 +101,10 @@ const RoleAssignment = () => {
                                     </div>
                               </td>
                               <td className="border border-gray-300 px-1 py-1 whitespace-nowrap text-center cursor-pointer">
-                                    {user.email}
+                                    {user?.email}
                               </td>
                               <td className="border border-gray-300 px-2 py-1 min-w-[150px]">
-                                    <Select defaultValue={user.role.roleName} onValueChange={(newRole) => handleChangeInRole(newRole, user, index)}>
+                                    <Select defaultValue={user?.role?.roleName} onValueChange={(newRole) => handleChangeInRole(newRole, user, index)}>
                                           <SelectTrigger className="w-[180px] cursor-pointer">
                                                 <SelectValue placeholder="Your Profile" />
                                           </SelectTrigger>
