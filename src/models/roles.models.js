@@ -5,8 +5,10 @@ const roleSchema = new mongoose.Schema({
       type:String,
       required:true,
       trim:true,
-      unique:true
-  }
+      unique:true,
+      lowercase: true,
+  },
+  permissions:[String]
 });
 
 const Role = mongoose.model("Role",roleSchema);

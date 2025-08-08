@@ -32,10 +32,10 @@ app.use(cookieParser());
 app.use(errorHandler);
 
 //Routes
-app.use("/profile",authMiddleware,checkAuthorisation(["Admin"]),profileRoutes);
-app.use("/attribute",authMiddleware,checkAuthorisation(["Admin"]),attributeRoutes);
-app.use("/users",authMiddleware,checkAuthorisation(["Admin"]),userRoutes);
-app.use("/roles",authMiddleware,roleRoutes);
+app.use("/profile",authMiddleware,checkAuthorisation(["admin"]),profileRoutes);
+app.use("/attribute",authMiddleware,checkAuthorisation(["admin"]),attributeRoutes);
+app.use("/users",authMiddleware,checkAuthorisation(["admin"]),userRoutes);
+app.use("/roles",authMiddleware,checkAuthorisation(["admin"]),roleRoutes);
 app.use("/auth",authRoutes);
 app.use("/password",passwordRoutes);
 
