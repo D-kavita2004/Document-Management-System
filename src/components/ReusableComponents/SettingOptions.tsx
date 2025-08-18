@@ -13,7 +13,7 @@ const SettingOptions = () => {
       const navigate = useNavigate();
       const settingsOptions = [
             {
-            title: "Role Creation",
+            title: "Roles",
             description: "Define custom roles to organize user access.",
             icon: <Shield className="w-6 h-6 text-blue-500" />,
             path: "/Settings/Roles",

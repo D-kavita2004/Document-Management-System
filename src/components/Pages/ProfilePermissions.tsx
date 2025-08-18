@@ -101,7 +101,7 @@ const handleGetAllProfiles = async()=>{
     // toast.success(res.data.message); 
   }
   catch(error){
-     toast.error(error.response?.data?.message || "No Data Found");
+     toast.error(err.response.data.message || err.response.statusText);
   }
 }
 

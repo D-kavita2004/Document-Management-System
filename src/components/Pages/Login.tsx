@@ -42,9 +42,9 @@ const Login = () => {
                   setUser(res.data.data);
                   navigate("/")
             }
-            catch(error){
-            console.log(error);
-            toast.error(error.response?.data?.message || "Could not Login the user");
+            catch(err){
+            console.log(err);
+            toast.error(err?.response?.data?.message || err.response.statusText);
             }
       }
       const handleGoogleLogin = async (credentialResponse) => {
