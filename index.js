@@ -27,9 +27,9 @@ app.use(cors({
   credentials: true
 }));
 
+//Global middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(errorHandler);
 
 //Routes
 app.use("/profile",authMiddleware,checkAuthorisation(["admin"]),profileRoutes);
@@ -58,6 +58,8 @@ app.post("/fetchProfileData",authMiddleware,async(req,res,next)=>{
      }
 })
 
+// Error handling middleware
+app.use(errorHandler);
 // Connect to DB and only then start server
 connectDB()
   .then(() => {

@@ -14,7 +14,7 @@ const refreshTokenSchema = mongoose.Schema({
   expiresAt: {
     type: Date,
     required: true,
-    default: () => new Date(Date.now() + 24 * 60 * 60 * 1000) // 30 Days
+    default: () => new Date(Date.now() + 24 * 60 * 60 * 1000) // 1 day
   }
 }, { timestamps: true });
 
