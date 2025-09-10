@@ -13,6 +13,7 @@ import roleRoutes from "./src/routes/roles.route.js";
 import checkAuthorisation from "./src/middlewares/authorisaton.middleware.js";
 import User from "./src/models/user.models.js";
 import passwordRoutes from "./src/routes/password.routes.js";
+import permissiosRoutes from "./src/routes/permissions.routes.js";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use("/attribute",authMiddleware,checkAuthorisation(["admin"]),attributeRoute
 app.use("/users",authMiddleware,checkAuthorisation(["admin"]),userRoutes);
 app.use("/roles",authMiddleware,checkAuthorisation(["admin"]),roleRoutes);
 app.use("/auth",authRoutes);
+app.use("/permissions",permissiosRoutes);
 app.use("/password",passwordRoutes);
 
 app.get("/verify-token",authMiddleware,(req,res)=>{

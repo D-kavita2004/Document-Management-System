@@ -1,4 +1,4 @@
-/profile - canDeleteProfile,canAddProfile,canUpdateProfile,canGetAllProfiles
-/roles - canGetAllRoles,canAddNewRole,
-/profileAttributes - canGetProfileAttributes,canUpdateProfilePermission
-/user - canGetAllUsers,canChangeRoles
+/profile - can_delete_profile,can_add_profile,can_update_profile,can_get_all_profiles
+/roles - can_get_all_roles,can_add_new_role,can_delete_role,can_update_role
+/profileAttributes - can_get_profile_attributes,can_update_profile_permission
+/user - can_get_all_users,can_change_roles

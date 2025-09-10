@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.models.js"; 
-import RefreshTokenModel from "../models/RefreshToken.js";
+import RefreshTokenModel from "../models/RefreshToken.models.js";
 import { generateAccessToken } from "../constants/tokens.js";
 
 const authMiddleware =async (req, res, next) => {

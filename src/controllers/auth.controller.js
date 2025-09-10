@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import User from "../models/user.models.js";
-import RefreshTokenModel from "../models/RefreshToken.js";
+import RefreshTokenModel from "../models/RefreshToken.models.js";
 import jwt from "jsonwebtoken";
 import { auth, OAuth2Client } from "google-auth-library";
 import axios from "axios";
