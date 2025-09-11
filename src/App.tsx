@@ -43,7 +43,7 @@ function App() {
                 <Route path='/forget-password' element={<ForgetPassword/>}></Route>
                 <Route path='/reset-password/:token' element={<ResetPassword/>}></Route>
                 <Route element={<ProtectedRoute/>}>
-                  <Route path='/' element={<Layout/>}>
+                  {/* <Route path='/' element={<Layout/>}>
                       <Route index element={<Dashboard/>}></Route>
                       <Route path='/profile' element={<Profile/>}></Route>
                       <Route path='/My_Documents' element={<MyDocuments/>}></Route>
@@ -60,6 +60,22 @@ function App() {
                           <Route path='Assign-Role' element={<RoleAssignment/>}></Route>
                         </Route>
                       }                      
+                  </Route> */}
+                  <Route path='/' element={<Layout/>}>
+                      <Route index element={<Dashboard/>}></Route>
+                      <Route path='/profile' element={<Profile/>}></Route>
+                      <Route path='/My_Documents' element={<MyDocuments/>}></Route>
+                      <Route path='/Upload_Documents' element={<UploadDocuments/>}></Route>
+                      <Route path='/Search_Documents' element={<SearchDocuments/>}></Route>
+                      <Route path='/Profile_Permissions' element={<ProfilePermissions/>}></Route>
+                      <Route path='/Profile_Settings' element={<ProfileSettings/>}></Route>
+                      <Route path='/Role-Assignment' element={<RoleAssignment/>}></Route>
+                      <Route path='/Settings' element={<SettingsPage/>}>
+                          <Route path='' element={<SettingOptions/>}></Route>
+                          <Route path='Roles' element={<RoleCreation/>}></Route>
+                          <Route path='Role-Permissions' element={<RolePermission/>}></Route>
+                          <Route path='Assign-Role' element={<RoleAssignment/>}></Route>
+                        </Route>                    
                   </Route>
                 </Route>
                 <Route path='*' element={<ErrorPage/>}></Route>

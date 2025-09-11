@@ -81,14 +81,19 @@ const Header = ({ displayNav, setDisplayNav }) => {
         )}
 
         {/* Settings Icon */}
-        {
+        <Settings
+          size={30}
+          className="cursor-pointer hover:scale-110 transition"
+          onClick={() => navigate("/Settings")}
+        />
+        {/* {
           user.role === "admin" && 
           <Settings
           size={30}
           className="cursor-pointer hover:scale-110 transition"
           onClick={() => navigate("/Settings")}
         />
-        }
+        } */}
 
         {/* Avatar */}
         <Avatar onClick={() => navigate("/profile")} className="cursor-pointer" size={30}>
