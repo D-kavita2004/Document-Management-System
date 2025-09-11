@@ -33,12 +33,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 //Routes
-app.use("/profile",authMiddleware,checkAuthorisation(["admin"]),profileRoutes);
-app.use("/attribute",authMiddleware,checkAuthorisation(["admin"]),attributeRoutes);
-app.use("/users",authMiddleware,checkAuthorisation(["admin"]),userRoutes);
-app.use("/roles",authMiddleware,checkAuthorisation(["admin"]),roleRoutes);
+app.use("/profile",authMiddleware,profileRoutes);
+app.use("/attribute",authMiddleware,attributeRoutes);
+app.use("/users",authMiddleware,userRoutes);
+app.use("/roles",authMiddleware,roleRoutes);
+app.use("/permissions",authMiddleware,permissiosRoutes);
+
 app.use("/auth",authRoutes);
-app.use("/permissions",permissiosRoutes);
 app.use("/password",passwordRoutes);
 
 app.get("/verify-token",authMiddleware,(req,res)=>{
