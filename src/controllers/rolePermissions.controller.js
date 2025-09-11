@@ -28,7 +28,6 @@ export const getRoleSpecificPermissions = async(req,res,next)=>{
                   .populate("permissionsList.permissionId")
                   .lean(); 
 
-
             if(!existingMapping){
                   //if it is a new role fetch the availbale permissions list
                   const data = await Permission.find({}).lean();
