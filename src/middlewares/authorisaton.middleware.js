@@ -4,15 +4,20 @@ import RolePermissionMapping from "../models/rolePermissionMapping.models.js";
 // Middleware function to check if the user has the required role(s)
 const checkAuthorisation = (requiredpermissionName) => async(req, res, next) => {
   try{
-    const permissionId = await Permission.find({permissionName:requiredpermissionName}).lean();
+    const permissionDoc = await Permission.findOne({permissionName:requiredpermissionName}).lean();
+    const permissionId = permissionDoc._id;
+    
     if(permissionId){
       const role_id = req.user.roleId;
       const mappingDoc = await RolePermissionMapping.findOne({role:role_id}).lean();
-
+      // console.log(mappingDoc);
       if(!mappingDoc){
         return res.status(403).json({ message: 'Permission is not assigned to the user' });
       }
-      const isPermissionGranted = mappingDoc.permissionsList.find((data)=>data.permissionId == permissionId);
+      const isPermissionGranted = mappingDoc.permissionsList.find(
+        (data) => String(data.permissionId) === String(permissionId)
+      );
+
       if(isPermissionGranted){
         return next();
       }
