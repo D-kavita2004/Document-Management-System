@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import RolePermissionMapping from "./rolePermissionMapping.models.js";
 
 const permissionSchema = new mongoose.Schema(
   {
@@ -23,6 +24,19 @@ const permissionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+permissionSchema.post("save", async function (doc) {
+  try {
+    await RolePermissionMapping.updateMany(
+      {},
+      { $push: { permissionsList: { permissionId: doc._id, approved: false } } }
+    );
+    console.log(`Added permission ${doc.permissionName} to all role mappings`);
+  } catch (err) {
+    console.error("Failed to update role mappings with new permission:", err);
+  }
+});
+
 
 const Permission = mongoose.model("Permission", permissionSchema);
 export default Permission;

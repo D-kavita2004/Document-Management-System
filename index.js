@@ -37,7 +37,8 @@ app.use("/profile",authMiddleware,profileRoutes);
 app.use("/attribute",authMiddleware,attributeRoutes);
 app.use("/users",authMiddleware,userRoutes);
 app.use("/roles",authMiddleware,roleRoutes);
-app.use("/permissions",authMiddleware,permissiosRoutes);
+// app.use("/permissions",authMiddleware,permissiosRoutes);
+app.use("/permissions",permissiosRoutes);
 
 app.use("/auth",authRoutes);
 app.use("/password",passwordRoutes);
