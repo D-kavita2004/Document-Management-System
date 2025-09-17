@@ -58,7 +58,6 @@ const userSchema = new mongoose.Schema({
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role',
-    default:"6865005889937e6eee93640f"
   }
 });
 
@@ -66,7 +65,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("save", async function (next) {
   try {
     if (!this.role) {
-      const userRole = await Role.findOne({ roleName: "User" });
+      const userRole = await Role.findOne({ roleName: "user" });
       if (userRole) {
         this.role = userRole._id;
       } else {

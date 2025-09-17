@@ -1,4 +1,5 @@
-/profile - can_delete_profile,can_add_profile,can_update_profile,can_get_all_profiles
-/roles - can_get_all_roles,can_add_new_role,can_delete_role,can_update_role
+/profile - can_delete_profile, can_add_profile, can_update_profile, can_get_all_profiles
+/roles - can_get_all_roles, can_add_new_role, can_delete_role, can_update_role
 /profileAttributes - can_get_profile_attributes,can_update_profile_permission
-/user - can_get_all_users,can_change_roles
+/user - can_get_all_users, can_change_roles
+/permissions - can_insert_permissions, can_get_role_permissions, can_update_role_permissions

@@ -11,6 +11,7 @@ const authMiddleware =async (req, res, next) => {
   try {
     // 1. Try access token
     const decoded = jwt.verify(AccessToken, process.env.ACCESS_TOKEN_SECRET);
+    // console.log(decoded);
     req.user = decoded;
     return next();
 
@@ -26,7 +27,9 @@ const authMiddleware =async (req, res, next) => {
                     _id: populated_data._id,
                     email: populated_data.email,
                     role: populated_data.role.roleName,
+                    roleId: populated_data.role._id
             };
+            // console.log("tokenPayload",tokenPayload);
             const newAccessToken = generateAccessToken(tokenPayload);
             res.cookie("AccessToken",newAccessToken, {
               httpOnly: true,
@@ -34,11 +37,12 @@ const authMiddleware =async (req, res, next) => {
               sameSite: "lax",       
               path: "/",
               });
-            
+            // console.log("newAccessToken",newAccessToken)
           req.user = {
-            id: populated_data._id,
+            _id: populated_data._id,
             email: populated_data.email,
-            role: populated_data.role.roleName
+            role: populated_data.role.roleName,
+            roleId: populated_data.role._id
           };
   ;
           return next();

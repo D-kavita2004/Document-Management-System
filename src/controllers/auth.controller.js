@@ -64,6 +64,7 @@ export const signUp = async (req,res,next) =>{
                   _id: populated_data._id,
                   email: populated_data.email,
                   role: populated_data.role.roleName,
+                  roleId: populated_data.role._id
             };
             const accessToken = generateAccessToken(tokenPayload);
             const refreshToken = generateRefreshToken();
@@ -146,6 +147,7 @@ export const logIn = async (req,res,next)=>{
                   _id: populated_data._id,
                   email: populated_data.email,
                   role: populated_data.role.roleName,
+                  roleId: populated_data.role._id
             };            
             const accessToken = generateAccessToken(tokenPayload);
             const refreshToken = generateRefreshToken();
@@ -250,6 +252,7 @@ export const handleGoogleLogin = async (req,res,next)=>{
             _id: populated_data._id,
             email: populated_data.email,
             role: populated_data.role.roleName,
+            roleId: populated_data.role._id
       };
 
       const accessToken = generateAccessToken(tokenPayload);
@@ -347,6 +350,7 @@ export const handleGithubLogin = async(req,res,next)=>{
                   _id: populated_data._id,
                   email: populated_data.email,
                   role: populated_data.role.roleName,
+                  roleId: populated_data.role._id
             };
 
             const accessToken = generateAccessToken(tokenPayload);
