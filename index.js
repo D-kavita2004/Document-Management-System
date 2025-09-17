@@ -70,6 +70,10 @@ connectDB()
     app.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);
     });
+//     app.listen(3000, "0.0.0.0", () => {
+//   console.log("Server running on http://0.0.0.0:3000");
+// });
+
     console.log("Database connected successfully.");
   })
   .catch((err) => {
