@@ -10,7 +10,8 @@ const SettingsPage = () => {
     path: "/Settings",
   });
   return (
-    <div className="w-full h-full p-6">
+    <div className="w-full h-full p-6 overflow-y-auto">
+
       <div className="flex items-center justify-center gap-2 mb-6">
         <p
           className="text-2xl font-bold text-center cursor-pointer"

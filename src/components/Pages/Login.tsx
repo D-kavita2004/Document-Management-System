@@ -69,15 +69,15 @@ const Login = () => {
             const githubUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=read:user%20user:email`;
             window.location.href = githubUrl;
       }
-      const handleSignInWithLinkedIn = () => {
-            const clientId = import.meta.env.VITE_LINKEDIN_CLIENT_ID;
-            const redirectUri = encodeURIComponent(`${BASE_URL}/auth/linkedin/callback`);
-            const scope = encodeURIComponent("r_liteprofile r_emailaddress");
+      // const handleSignInWithLinkedIn = () => {
+      //       const clientId = import.meta.env.VITE_LINKEDIN_CLIENT_ID;
+      //       const redirectUri = encodeURIComponent(`${BASE_URL}/auth/linkedin/callback`);
+      //       const scope = encodeURIComponent("r_liteprofile r_emailaddress");
 
-            const linkedInUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=foobar&scope=${scope}`;
+      //       const linkedInUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=foobar&scope=${scope}`;
 
-            window.location.href = linkedInUrl;
-            };
+      //       window.location.href = linkedInUrl;
+      //       };
 
       useEffect(()=>{
             if(user){
@@ -120,10 +120,10 @@ const Login = () => {
                         <div className="mx-auto my-auto">SignIn with GitHub</div>
                   </div>
                   <br></br>
-                  <div className="w-full text-center bg-white text-black pt-2 pb-2 flex cursor-pointer" onClick={handleSignInWithLinkedIn}>   
+                  {/* <div className="w-full text-center bg-white text-black pt-2 pb-2 flex cursor-pointer" onClick={handleSignInWithLinkedIn}>   
                         <div className="object-contain w-6 h-6 relative ml-2"><img src="src\assets\github-logo.png" alt="login with github"></img></div>
                         <div className="mx-auto my-auto">SignIn with LinkedIn</div>
-                  </div>
+                  </div> */}
                   </CardFooter>
             </Card>
       </div>
