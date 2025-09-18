@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import RolePermissionMapping from "./rolePermissionMapping.models.js";
 
 const permissionSchema = new mongoose.Schema(
   {
@@ -7,35 +6,27 @@ const permissionSchema = new mongoose.Schema(
       type: String,
       required: [true, "Permission name is required"],
       unique: true,
-      lowercase: true, 
+      lowercase: true,
       trim: true,
       minlength: [3, "Permission name must be at least 3 characters long"],
       maxlength: [50, "Permission name cannot exceed 50 characters"],
       match: [
         /^can_[a-z_]+$/,
         'Permission name must start with "can" followed by lowercase letters or underscores.',
-      ],    // should be can_edit_user
+      ],
     },
     description: {
       type: String,
       trim: true,
       default: "",
     },
+    enabled: {
+      type: Boolean,
+      default: true, // you can choose true/false depending on use case
+    },
   },
   { timestamps: true }
 );
-
-permissionSchema.post("save", async function (doc) {
-  try {
-    await RolePermissionMapping.updateMany(
-      {},
-      { $push: { permissionsList: { permissionId: doc._id, approved: false } } }
-    );
-    console.log(`Added permission ${doc.permissionName} to all role mappings`);
-  } catch (err) {
-    console.error("Failed to update role mappings with new permission:", err);
-  }
-});
 
 
 const Permission = mongoose.model("Permission", permissionSchema);

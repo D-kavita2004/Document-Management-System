@@ -1,23 +1,23 @@
 const initialPermissionsList = [
   // Profile
-  // {
-  //   permissionName: "can_delete_profile",
-  //   description: "Allows deletion of a user profile",
-  // },
-  // {
-  //   permissionName: "can_add_profile",
-  //   description: "Allows creation of a new user profile",
-  // },
-  // {
-  //   permissionName: "can_update_profile",
-  //   description: "Allows updating an existing user profile",
-  // },
-  // {
-  //   permissionName: "can_get_all_profiles",
-  //   description: "Allows viewing all user profiles",
-  // },
+  {
+    permissionName: "can_delete_profile",
+    description: "Allows deletion of a user profile",
+  },
+  {
+    permissionName: "can_add_profile",
+    description: "Allows creation of a new user profile",
+  },
+  {
+    permissionName: "can_update_profile",
+    description: "Allows updating an existing user profile",
+  },
+  {
+    permissionName: "can_get_all_profiles",
+    description: "Allows viewing all user profiles",
+  },
 
-  // // Roles
+ // Roles
   {
     permissionName: "can_get_all_roles",
     description: "Allows viewing all available roles",

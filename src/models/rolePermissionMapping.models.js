@@ -1,17 +1,5 @@
 import mongoose from "mongoose";
 
-const listSchema = new mongoose.Schema({
-  permissionId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Permission", 
-          required: true,
-  },
-  approved: {
-          type: Boolean,
-          default: false,
-  },
-});
-
 const rolePermissionSchema = new mongoose.Schema(
   {
     role: {
@@ -20,10 +8,22 @@ const rolePermissionSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    permissionsList: [listSchema],
+    // Store only array of Permission IDs
+    permissionsList: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Permission",
+        required: true,
+      },
+    ],
   },
   { timestamps: true }
 );
 
-const RolePermissionMapping = mongoose.model("RolePermissionMapping", rolePermissionSchema);
+const RolePermissionMapping = mongoose.model(
+  "RolePermissionMapping",
+  rolePermissionSchema
+);
+
 export default RolePermissionMapping;
+
