@@ -121,12 +121,12 @@ const Navbar = ({ displayNav , setDisplayNav }) => {
                             }}>
                                 Profile Permissions
                             </AccordionContent>
-                            <AccordionContent className='text-md font-bold cursor-pointer'onClick={() => {
+                            {/* <AccordionContent className='text-md font-bold cursor-pointer'onClick={() => {
                                 navigate("/Role-Assignment");
                                 afterNavigation(); 
                             }}>
                                 Role Assignment
-                            </AccordionContent>
+                            </AccordionContent> */}
                         </AccordionItem>
                     </Accordion>
                 </div>
