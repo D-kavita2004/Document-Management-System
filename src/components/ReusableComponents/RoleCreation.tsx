@@ -198,7 +198,9 @@ const RoleCreation = () => {
       </div>
 
       {/* Role List */}
-      <div className="flex flex-wrap gap-5 max-w-[80%] max-h-[50vh] overflow-y-auto">
+      {
+        existingRoles.length!=0 ?(
+                <div className="flex flex-wrap gap-5 max-w-[80%] max-h-[50vh] overflow-y-auto">
         {existingRoles.map((roleData) => (
           <div
             key={roleData._id}
@@ -260,6 +262,14 @@ const RoleCreation = () => {
           </div>
         ))}
       </div>
+        ):(
+        <div className="flex justify-center items-center min-h-[30vh]">
+          <h2 className="text-lg font-semibold text-gray-500">
+            No Roles Available
+          </h2>
+        </div>
+      )
+      }
     </div>
   );
 };

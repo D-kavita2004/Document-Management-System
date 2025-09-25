@@ -115,7 +115,8 @@ return (
     </h2>
 
     <Accordion type="single" collapsible className="space-y-3">
-      {roles.map((roleData) => (
+      {roles.length!=0 ? (
+        roles.map((roleData) => (
         <AccordionItem
           key={roleData._id}
           value={roleData.roleName}
@@ -132,8 +133,10 @@ return (
             {loading && activeRoleId === roleData._id ? (
               <p className="text-gray-500 italic">Loading permissions...</p>
             ) : (
+              
+                permissionsList.length !=0 ? (
               <>
-                {/* Permission grid with its own scroll if too tall */}
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 break-words max-h-64 overflow-y-auto pr-2">
                   {permissionsList.map((data) => (
                     <div
@@ -165,10 +168,24 @@ return (
                   </Button>
                 </div>
               </>
+                ):(
+                  <div className="flex justify-center items-center min-h-[30vh]">
+                    <h2 className="text-lg font-semibold text-gray-500">
+                      No Permissions Available
+                    </h2>
+                  </div>
+                )
             )}
           </AccordionContent>
         </AccordionItem>
-      ))}
+      ))
+      ): (
+    <div className="flex justify-center items-center min-h-[30vh]">
+      <h2 className="text-lg font-semibold text-gray-500">
+        No Roles Available
+      </h2>
+    </div>
+  )}
     </Accordion>
   </div>
 );

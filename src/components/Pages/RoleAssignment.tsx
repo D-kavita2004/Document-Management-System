@@ -199,109 +199,119 @@ const handleChangeInRole = (newRole: string, userObj: User) => {
 
   return (
     <div className=" space-y-4 lg:max-w-[80%] mx-auto max-w-[100%]">
-      {/* 🔍 Global Search */}
-      <div className="flex items-center justify-between w-full">
-          <Input
-            placeholder="Search users..."
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="max-w-[70%]"
-          />
-          <Button
-            className="w-fit"
-            onClick={saveRoleChanges}
-            disabled={updatedUserData.length === 0}
-          >
-            Save
-          </Button>
-      </div>
+        {
+          allUsers.length!=0 ? (
+            <>
+                {/* 🔍 Global Search */}
+                <div className="flex items-center justify-between w-full">
+                    <Input
+                      placeholder="Search users..."
+                      value={globalFilter ?? ""}
+                      onChange={(e) => setGlobalFilter(e.target.value)}
+                      className="max-w-[70%]"
+                    />
+                    <Button
+                      className="w-fit"
+                      onClick={saveRoleChanges}
+                      disabled={updatedUserData.length === 0}
+                    >
+                      Save
+                    </Button>
+                </div>
 
-      {/* 📊 Table */}
-      <div className="overflow-auto border rounded-md shadow-md max-h-[70vh]">
-        <table className="w-full border-collapse">
-          <thead className="bg-[#1A33A9] dark:bg-white dark:text-black text-white sticky top-0 z-10">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="px-4 py-2 cursor-pointer select-none"
-                    onClick={header.column.getToggleSortingHandler()}
-                  >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                    {{
-                      asc: " 🔼",
-                      desc: " 🔽",
-                    }[header.column.getIsSorted() as string] ?? null}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-            <tbody>
-              {table.getRowModel().rows.length > 0 ? (
-                table.getRowModel().rows.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="even:bg-gray-200 dark:bg-[#3b3636]"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        key={cell.id}
-                        className="border border-gray-300 px-2 py-1 text-center"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+                {/* 📊 Table */}
+                <div className="overflow-auto border rounded-md shadow-md max-h-[70vh]">
+                  <table className="w-full border-collapse">
+                    <thead className="bg-[#1A33A9] dark:bg-white dark:text-black text-white sticky top-0 z-10">
+                      {table.getHeaderGroups().map((headerGroup) => (
+                        <tr key={headerGroup.id}>
+                          {headerGroup.headers.map((header) => (
+                            <th
+                              key={header.id}
+                              className="px-4 py-2 cursor-pointer select-none"
+                              onClick={header.column.getToggleSortingHandler()}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              {{
+                                asc: " 🔼",
+                                desc: " 🔽",
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </th>
+                          ))}
+                        </tr>
+                      ))}
+                    </thead>
+                      <tbody>
+                        {table.getRowModel().rows.length > 0 ? (
+                          table.getRowModel().rows.map((row) => (
+                            <tr
+                              key={row.id}
+                              className="even:bg-gray-200 dark:bg-[#3b3636]"
+                            >
+                              {row.getVisibleCells().map((cell) => (
+                                <td
+                                  key={cell.id}
+                                  className="border border-gray-300 px-2 py-1 text-center"
+                                >
+                                  {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext()
+                                  )}
+                                </td>
+                              ))}
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td
+                              colSpan={columns.length}
+                              className="text-center py-4 text-gray-500"
+                            >
+                              No results found
+                            </td>
+                          </tr>
                         )}
-                      </td>
-                    ))}
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="text-center py-4 text-gray-500"
-                  >
-                    No results found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+                      </tbody>
 
-        </table>
-      </div>
+                  </table>
+                </div>
 
-      {/* 📄 Pagination */}
-      <div className="flex justify-between items-center">
-        <div>
-          <Button
-            variant="outline"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Prev
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="ml-1"
-          >
-            Next
-          </Button>
-        </div>
-        <span>
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
-        </span>
-      </div>
-
-      {/* 💾 Save Changes */}
+                {/* 📄 Pagination */}
+                <div className="flex justify-between items-center">
+                  <div>
+                    <Button
+                      variant="outline"
+                      onClick={() => table.previousPage()}
+                      disabled={!table.getCanPreviousPage()}
+                    >
+                      Prev
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => table.nextPage()}
+                      disabled={!table.getCanNextPage()}
+                      className="ml-1"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                  <span>
+                    Page {table.getState().pagination.pageIndex + 1} of{" "}
+                    {table.getPageCount()}
+                  </span>
+                </div>
+            </>
+          ): (
+    <div className="flex justify-center items-center min-h-[30vh]">
+      <h2 className="text-lg font-semibold text-gray-500">
+        No users Available
+      </h2>
+    </div>
+  )
+        }
 
     </div>
   );
